@@ -1,0 +1,31 @@
+﻿@model HKQTravelling.Models.Users
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<h2>Đăng nhập</h2>
+
+@if (!string.IsNullOrEmpty(ViewData["erro_username"] as string))
+{
+    <p class="text-danger">@ViewData["erro_username"]</p>
+}
+
+@if (!string.IsNullOrEmpty(ViewData["erro_password"] as string))
+{
+    <p class="text-danger">@ViewData["erro_password"]</p>
+}
+
+<form asp-action="Login" asp-controller="Account" method="post">
+    <div class="form-group">
+        <label for="UserName">Tên đăng nhập:</label>
+        <input type="text" id="UserName" name="UserName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="Password">Mật khẩu:</label>
+        <input type="password" id="Password" name="Password" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Đăng Nhập</button>
+    <br />
+    <p>Nếu bạn chưa có tài khoản thì hãy nhấn vào nút <a asp-area="" asp-controller="Account" asp-action="Register">Đăng ký</a></p>
+</form>
