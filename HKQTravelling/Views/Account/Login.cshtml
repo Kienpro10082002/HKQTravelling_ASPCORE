@@ -1,20 +1,11 @@
-﻿@model HKQTravelling.Models.Users
+﻿@using Newtonsoft.Json;
+@model HKQTravelling.Models.Users
 
 @{
     ViewData["Title"] = "Đăng nhập";
 }
 
 <h2>Đăng nhập</h2>
-
-@if (!string.IsNullOrEmpty(ViewData["erro_username"] as string))
-{
-    <p class="text-danger">@ViewData["erro_username"]</p>
-}
-
-@if (!string.IsNullOrEmpty(ViewData["erro_password"] as string))
-{
-    <p class="text-danger">@ViewData["erro_password"]</p>
-}
 
 <form asp-action="Login" asp-controller="Account" method="post">
     <div class="form-group">
@@ -29,3 +20,13 @@
     <br />
     <p>Nếu bạn chưa có tài khoản thì hãy nhấn vào nút <a asp-area="" asp-controller="Account" asp-action="Register">Đăng ký</a></p>
 </form>
+
+<script>
+    // Kiểm tra xem có thông báo từ ViewData hay không
+    var loginError = @Html.Raw(JsonConvert.SerializeObject(ViewData["LoginError"]));
+
+    // Nếu có thông báo, hiển thị nó bằng cửa sổ thông báo (alert)
+    if (loginError) {
+        alert(loginError);
+    }
+</script>
