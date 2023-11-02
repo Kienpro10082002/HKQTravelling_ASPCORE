@@ -1,8 +1,8 @@
 ﻿@model HKQTravelling.Models.Users
-
 @{
     ViewData["Title"] = "Đăng ký";
 }
+
 
 <h2>Đăng ký</h2>
 
@@ -51,6 +51,7 @@
     <div class="form-group">
         <label for="Birthdate">Ngày tháng năm sinh:</label>
         <input type="date" id="Birthdate" name="Birthdate" class="form-control" />
+        <p class="text-danger">@ViewData["checking_birthdate"]</p>
     </div>
     <br />
     <button type="submit" class="btn btn-primary">Đăng ký</button>

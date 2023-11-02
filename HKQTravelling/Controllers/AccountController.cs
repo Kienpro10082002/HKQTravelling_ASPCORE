@@ -3,6 +3,7 @@ using HKQTravelling.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
 using System.Text;
@@ -13,10 +14,10 @@ namespace HKQTravelling.Controllers
     public class AccountController : Controller
     {
         private readonly ApplicationDBContext data;
-
         public AccountController(ApplicationDBContext data)
         {
             this.data = data;
+           
         }
 
         #region features
@@ -39,8 +40,10 @@ namespace HKQTravelling.Controllers
             string password = formCollection["Password"];
             string hashedPassword = Encrypt.GetMD5Hash(password);
             var dbUser = await data.users.FirstOrDefaultAsync(u => u.Username == username && u.Password == hashedPassword);
+            var dbUserDetails = await data.userDetails.FirstOrDefaultAsync(u => u.UserDetailId == u.UserDetailId); 
             if (dbUser != null)
             {
+                ViewBag.thongbao = "đăng nhập thành công";
                 if (dbUser.RoleId == 1) // Nếu là admin
                 {
                     // Chuyển đổi đối tượng dbUser thành chuỗi JSON
@@ -55,6 +58,11 @@ namespace HKQTravelling.Controllers
                 }
                 else
                 {
+                    HttpContext.Session.SetString("user_account", JsonConvert.SerializeObject(dbUser));
+                    HttpContext.Session.SetString("fullName", dbUserDetails.Surname +' '+ dbUserDetails.Name);
+                    HttpContext.Session.SetString("Email", dbUserDetails.Email);
+                    HttpContext.Session.Set("user_id", BitConverter.GetBytes(dbUser.UserId));
+
                     return RedirectToAction("Index", "Home");
                 }
             }
@@ -75,9 +83,8 @@ namespace HKQTravelling.Controllers
             string surname = formCollection["Surname"].ToString();
             string name = formCollection["Name"].ToString();
             string gender = formCollection["Gender"].ToString();
-            string birthdate = formCollection["BirthDate"].ToString();
+            string birthdate = formCollection["Birthdate"].ToString();
             string niNumber = formCollection["NiNumber"].ToString();
-
             if (string.IsNullOrEmpty(username))
             {
                 ViewData["checking_user"] = "Tài khoản không được để trống!";
@@ -123,6 +130,16 @@ namespace HKQTravelling.Controllers
                 ViewData["checking_name"] = "Tên trống";
                 return View();
             }
+            else if (string.IsNullOrEmpty(birthdate))
+            {
+                ViewData["checking_birthdate"] = "Vui lòng nhập ngày sinh của bạn.";
+                return View();
+            }
+            else if (CheckAccountInformation.ValidateBirthdate(DateTime.Parse(birthdate))==false)
+            {
+                    ViewData["checking_birthdate"] = "Lưu ý tuổi không dưới 5 và trên 90 bạn ơi ";
+                    return View();
+            }
             else
             {
                 var dbUser = new Models.Users
@@ -130,7 +147,7 @@ namespace HKQTravelling.Controllers
                     Username = username,
                     Password = Encrypt.GetMD5Hash(password),
                     Status = 1,
-                    CreationDate = Convert.ToDateTime(DateTime.Today),
+                    CreationDate = DateTime.Now,
                     RoleId = 2 // Vai trò người dùng
                 };
 
@@ -149,8 +166,16 @@ namespace HKQTravelling.Controllers
                 data.users.Add(dbUser);
                 data.userDetails.Add(dbUserDetails);
                 await data.SaveChangesAsync();
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account");                                  
             }
+        }
+        public async Task<IActionResult> Logout()
+        {
+            // Xóa tất cả các thông tin liên quan đến phiên đăng nhập
+            HttpContext.Session.Clear();
+
+          
+            return RedirectToAction("Index", "Home");
         }
         #endregion
     }

@@ -27,7 +27,6 @@ namespace HKQTravelling.Models
         public int? Status { get; set; }
 
         [Column("CREATION_DATE")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)] // Tự động tạo ngày
         public DateTime? CreationDate { get; set; }
 
         [Column("UPDATE_DATE")]

@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNetCore.Http;﻿
+@if (Context.Session.GetString("user_account") == null)
+{ <li class="nav-item">
+          <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Đăng nhập</a>
+  </li>
+}
+else
+{
+    <div class="navbar-nav nav-item dropdown" style="position: relative;">
+        @if (!string.IsNullOrEmpty(Context.Session.GetString("fullName")))
+    {
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+           data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-user-circle"></i> 
+            <span>@Context.Session.GetString("fullName")</span> 
+        </a>
+    }
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="position: absolute; left: -150px; top: 60px;">
+        <li><a class="dropdown-item" href="@Url.Action("profile", "Guest")"><i class="fa-solid fa-user-circle"></i> @Context.Session.GetString("fullName")</a></li>
+        <li><a class="dropdown-item" href="@Url.Action("changePassword", "Guest")">Đổi mật khẩu</a></li>
+        <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Đăng xuất</a></li>
+    </ul>
+    </div>
+}
