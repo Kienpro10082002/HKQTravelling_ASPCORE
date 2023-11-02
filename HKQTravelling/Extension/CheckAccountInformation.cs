@@ -65,5 +65,18 @@ namespace HKQTravelling.Extension
                 return false;
             }
         }
+        public static bool ValidateBirthdate(DateTime birthdate)
+        {
+       
+            // Kiểm tra xem ngày sinh có hợp lệ hay không
+            DateTime now = DateTime.Now;
+            TimeSpan age = now - birthdate;
+            if (age.Days < 365 * 5 || age.Days > 365 * 90)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
