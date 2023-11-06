@@ -1,0 +1,33 @@
+﻿
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    @foreach (var imageUrl in ViewBag.ImageUrls)
+                    {
+                        <div class="col-lg-4 col-md-4 col-sm-6">
+                            <img src="~/img/Tour/@imageUrl" class="img-fluid" alt="Tour Image">
+                        </div>
+                    }
+                    <div class="col-lg-7 col-md-7 col-sm-6">
+                        <p>@ViewBag.Detail.TourName</p>
+                        <h2 class="mt-5">
+                            <small class="text-success">@String.Format("{0:0,0}", ViewBag.Detail.Price) VND</small>
+                        </h2>
+                        @foreach (var tourDay in ViewBag.TourDays)
+                        {
+                                <p>@tourDay.DayNumber</p>
+                                @Html.Raw(tourDay.Description)
+                                <p>@tourDay.Destination</p>
+                                <p>@tourDay.TimeSchedule</p>                        
+                        }
+                
+                        <form method="post">
+                            <button type="submit" class="btn btn-primary">Book Now</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+

@@ -1,0 +1,109 @@
+﻿@using HKQTravelling.Models;
+@model IEnumerable<Tours>
+<div class="bread-crumb">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+
+            <li class="breadcrumb-item active">Tour khuyến mãi</li>
+        </ul>
+    </div>
+</div>
+<div class="sale-tour__content box">
+    <div class="container">
+        <div class="tab-search">
+            <div class="tab-search__left">
+                <div class="box__head text-center">
+                    <h3>Tour khuyến mãi</h3>
+                </div>
+            </div>
+            <div class="tab-search__right">
+                <span class="navtab-text">Sắp xếp theo : </span>
+                <ul class="nav nav-pills navtab-combo">
+                    <li class="nav-item nav-item-combo">
+                        <a class="nav-link nav-link-combo" data-toggle="pill" href="#hottour2"><i class="fas fa-long-arrow-alt-up"></i>Giá tăng dần</a>
+                    </li>
+                    <li class="nav-item nav-item-combo">
+                        <a class="nav-link nav-link-combo" data-toggle="pill" href="#hottour3"><i class="fas fa-long-arrow-alt-down"></i>Giá giảm dần</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content box__content">
+        <div class="tab-pane active" id="hottour1">
+            <div class="hot-tour__list list-tour">
+                 @foreach(var tour in Model)
+                    {
+                <div class="list-tour__item">
+                   
+                        <div class="list-tour__item-detail">
+                            <div class="list-tour__img">
+                                <a href="/tour/ha-noi-–-da-nang-–-ba-na-hill-–-pho-co-hoi-an"><img src="/files/images/tours/hoi_an_nam_trong_top_50_diem_den-1594520936343.jpg" alt=""></a>
+                                <div class="time-slot">
+                                    <span class="list-tour__time">
+                                        <i class="fas fa-clock"></i>
+
+                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>@(tour.EndDate.Value.Day - tour.StartDate.Value.Day) Ngày</small>
+                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>@(tour.EndDate.Value.Day - tour.StartDate.Value.Day - 1)  Đêm</small>
+                                    </span>
+                                    <span class="list-tour__slot">
+                                        <i class="fas fa-user"></i>
+                                        20 chỗ
+                                    </span>
+                                </div>
+                                <div class="list-tour__sale">
+                                    <img src="/Files/Images/tours/group.png" alt="">
+                                    <div class="sale-detail">
+                                        <p class="sale-text">sale</p>
+                                        <span class="sale-price">25<span class="unit">%</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-tour__content">
+                                <div class="list-tour__title">
+                                    <h4>
+                                        <a href="/tour/ha-noi-–-da-nang-–-ba-na-hill-–-pho-co-hoi-an">
+                                           @tour.TourName <span class="list-tour__time">
+                                                (
+                                                <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>@(tour.EndDate.Value.Day - tour.StartDate.Value.Day) Ngày</small>
+                                                <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>@(tour.EndDate.Value.Day - tour.StartDate.Value.Day - 1)  Đêm</small>
+                                            </span>
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div class="list-tour__detail">
+                                    <div class="list-tour__left">
+                                        <div class="list-tour__transport">
+                                            <i class="fas fa-walking"></i>
+                                            <span class="transport">Máy Bay &amp; Ô Tô</span>
+                                        </div>
+                                        <div class="list-tour__date">
+                                            <i class="fas fa-calendar-alt"></i> @tour.StartDate.Value.Year
+                                        </div>
+                                    </div>
+                                    <div class="list-tour__right">
+                                        <div class="list-tour__price">
+                                            <p class="price-title">giá từ</p>
+                                            <span class="price">@String.Format("{0:0,0}",tour.Price) VND </span>
+                                        </div>
+                                        <div class="d-flex justify-content-center mb-2">
+                                            <a class="nav-link text-dark" asp-area="" asp-controller="Tour" asp-action="DetailTour" asp-route-id="@tour.TourId">Chi Tiết</a>
+                                        </div>
+                                        <a href="/Booktour/1116/ha-noi-–-da-nang-–-ba-na-hill-–-pho-co-hoi-an" style="float: right;" class="btn btn--placeholder"> Giữ chỗ</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                   
+                </div>
+                
+                    
+                }
+            </div>
+        </div>
+    </div>
+    </div>
+    

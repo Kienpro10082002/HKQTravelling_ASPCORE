@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Security.Cryptography.X509Certificates;
+using HKQTravelling.Extension;
 
 namespace HKQTravelling.Models
 {
@@ -63,3 +64,4 @@ namespace HKQTravelling.Models
         public Rules rules { get; set; }
     }
 }
+
