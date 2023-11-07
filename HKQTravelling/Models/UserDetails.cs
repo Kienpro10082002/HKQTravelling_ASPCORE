@@ -40,6 +40,9 @@ namespace HKQTravelling.Models
         [StringLength(12)]
         public string? NiNumber { get; set; }
 
+        [Column("IMAGE_URL")]
+        public string? ImageUrl { get; set; }
+
         //Khóa ngoại
         [Column("USER_ID")]
         public long? UserId { get; set; }

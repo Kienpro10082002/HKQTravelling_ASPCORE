@@ -12,6 +12,9 @@ namespace HKQTravelling.Models
         [Column("AMOUNT")]
         public int? Amount { get; set; }
 
+        [Column("TOTAL_PRICE")]
+        public double? TotalPrices { get; set; }
+
         [Column("PAYMENT_DATE")]
         public DateTime? PaymentDate { get; set; }
 

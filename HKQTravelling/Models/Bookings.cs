@@ -13,12 +13,25 @@ namespace HKQTravelling.Models
         [Column("BOOKING_DATE")]
         public DateTime? BookingDate { get; set; }
 
-        //Khóa ngoại
-        [Column("TICKET_INFO_ID")]
-        public long? TicketInfoId { get; set; }
+        [Column("NUM_ADULTS")]
+        public int? NumAdults { get; set; }
 
-        [ForeignKey("TicketInfoId")]
-        public TicketInformations ticketInformations { get; set; }
+        [Column("NUM_TODDLERS")]
+        public int? NumToddlers { get; set; }
+
+        [Column("NUM_KIDS")]
+        public int? NumKids { get; set; }
+
+        [Column("PRICE_ADULTS")]
+        public double? PriceAdults { get; set; }
+
+        [Column("PRICE_TODDLERS")]
+        public double? PriceToddlers { get; set; }
+
+        [Column("PRICE_KIDS")]
+        public double? PriceKids { get; set; }
+
+        //Khóa ngoại
 
         [Column("TOUR_ID")]
         public long? TourId { get; set; }
