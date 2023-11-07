@@ -28,9 +28,6 @@ namespace HKQTravelling.Models
             modelBuilder.Entity<UserDetails>()
                 .HasIndex(u => u.NiNumber)
                 .IsUnique();
-            modelBuilder.Entity<TicketTypes>()
-                .HasIndex(u => u.TypeName)
-                .IsUnique();
             modelBuilder.Entity<StartLocations>()
                 .HasIndex(u => u.StartLocationName)
                 .IsUnique();
@@ -42,8 +39,6 @@ namespace HKQTravelling.Models
         public DbSet<Roles> roles { get; set; }
         public DbSet<Users> users { get; set; }
         public DbSet<UserDetails> userDetails { get; set; }
-        public DbSet<TicketTypes> tickeTypes { get; set; }
-        public DbSet<TicketInformations> ticketInformations { get; set; }
         public DbSet<StartLocations> startLocations { get; set; }
         public DbSet<EndLocations> endLocations { get; set; }
         public DbSet<Discounts> discounts { get; set; }
