@@ -1,0 +1,102 @@
+﻿@model IEnumerable<HKQTravelling.Models.Tours>
+
+@{
+    ViewData["Title"] = "Show";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Show</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TourName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Remaining)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.discounts)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.startLocations)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.endLocations)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.rules)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TourName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Remaining)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.discounts.DiscountId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.startLocations.StartLocationName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.endLocations.EndLocationName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.rules.RuleId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.TourId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.TourId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.TourId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
