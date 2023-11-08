@@ -40,7 +40,6 @@ namespace HKQTravelling.Controllers
             string password = formCollection["Password"];
             string hashedPassword = Encrypt.GetMD5Hash(password);
             var dbUser = await data.users.FirstOrDefaultAsync(u => u.Username == username && u.Password == hashedPassword);
-            var dbUserDetails = await data.userDetails.FirstOrDefaultAsync(u => u.UserDetailId == u.UserDetailId); 
             if (dbUser != null)
             {
                 ViewBag.thongbao = "đăng nhập thành công";
@@ -58,10 +57,11 @@ namespace HKQTravelling.Controllers
                 }
                 else
                 {
-                    HttpContext.Session.SetString("user_account", JsonConvert.SerializeObject(dbUser));
-                    HttpContext.Session.SetString("fullName", dbUserDetails.Surname +' '+ dbUserDetails.Name);
-                    HttpContext.Session.SetString("Email", dbUserDetails.Email);
                     HttpContext.Session.Set("user_id", BitConverter.GetBytes(dbUser.UserId));
+                    HttpContext.Session.SetString("user_account", JsonConvert.SerializeObject(dbUser));
+                    var dbUserDetails = await data.userDetails.FirstOrDefaultAsync(u => u.users.UserId == dbUser.UserId);
+                    HttpContext.Session.SetString("fullName", dbUserDetails.Surname + ' ' + dbUserDetails.Name);
+                    HttpContext.Session.SetString("Email", dbUserDetails.Email);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -167,6 +167,52 @@ namespace HKQTravelling.Controllers
                 data.userDetails.Add(dbUserDetails);
                 await data.SaveChangesAsync();
                 return RedirectToAction("Login", "Account");                                  
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+
+            // Kiểm tra xem khóa "user_id" có tồn tại trong Session không
+            if (HttpContext.Session.TryGetValue("user_id", out byte[] userIdBytes))
+            {
+
+                // Nếu tồn tại, bạn có thể chuyển đổi giá trị từ mảng byte sang kiểu dữ liệu phù hợp
+                long userId = BitConverter.ToInt64(userIdBytes, 0);
+                var user = data.users.FirstOrDefault(x => x.UserId == userId);
+                var dbUserDetails = await data.userDetails.FirstOrDefaultAsync(u => u.users.UserId == user.UserId);
+                // Tiếp tục xử lý tại đây với userId
+
+                return View(dbUserDetails);
+            }
+            else
+            {
+                // Nếu "user_id" không tồn tại trong Session, chuyển hướng đến trang đăng ký
+                return RedirectToAction("Login", "Account");
+            }
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> User()
+        {
+
+            // Kiểm tra xem khóa "user_id" có tồn tại trong Session không
+            if (HttpContext.Session.TryGetValue("user_id", out byte[] userIdBytes))
+            {
+
+                // Nếu tồn tại, bạn có thể chuyển đổi giá trị từ mảng byte sang kiểu dữ liệu phù hợp
+                long userId = BitConverter.ToInt64(userIdBytes, 0);
+                var user = data.users.FirstOrDefault(x => x.UserId == userId);
+                var dbUserDetails = await data.userDetails.FirstOrDefaultAsync(u => u.users.UserId == user.UserId);
+                // Tiếp tục xử lý tại đây với userId
+
+                return View(dbUserDetails);
+            }
+            else
+            {
+                // Nếu "user_id" không tồn tại trong Session, chuyển hướng đến trang đăng ký
+                return RedirectToAction("Login", "Account");
             }
         }
         public async Task<IActionResult> Logout()

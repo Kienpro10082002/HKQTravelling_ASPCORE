@@ -16,7 +16,7 @@ else
         </a>
     }
     <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="position: absolute; left: -150px; top: 60px;">
-        <li><a class="dropdown-item" href="@Url.Action("profile", "Guest")"><i class="fa-solid fa-user-circle"></i> @Context.Session.GetString("fullName")</a></li>
+            <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile"><i class="fa-solid fa-user-circle"></i> @Context.Session.GetString("fullName")</a></li>
         <li><a class="dropdown-item" href="@Url.Action("changePassword", "Guest")">Đổi mật khẩu</a></li>
         <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Đăng xuất</a></li>
     </ul>
