@@ -10,8 +10,10 @@ namespace HKQTravelling.Models
          * tính là giá trị không null
         **/
         [Key]
-        [Column("RULE_ID")]
-        public long RuleId { get; set; }
+        [ForeignKey("Tour")]
+        public long TourId { get; set; } // Sử dụng TourId làm khóa chính và khóa ngoại
+
+        public Tours tours { get; set; } // Quan hệ 1-1 với Tour
 
         [Column("PRICE_INCLUDE")]
         [MaxLength(1000)]
