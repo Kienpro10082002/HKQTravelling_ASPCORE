@@ -4,9 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - HKQTravelling</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/HKQTravelling.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/User/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/User/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/User/HKQTravelling.styles.css" asp-append-version="true" />
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#mytextarea'
+        });
+    </script>
 </head>
 <body>
     <header>
@@ -20,12 +26,18 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Tour" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                             @Html.Partial("_loginPatrial") 
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Tour" asp-action="AddTour">Add Tour</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Tour" asp-action="Add_Tour_Days">Add Tour Days</a>
+                        </li>
+                        @Html.Partial("_loginPatrial")
                     </ul>
                 </div>
             </div>

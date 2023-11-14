@@ -1,0 +1,56 @@
+﻿@model HKQTravelling.Models.TourDays
+
+@{
+    ViewData["Title"] = "Add_Tour_Days";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h1>Add_Tour_Days</h1>
+
+<h4>TourDays</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Add_Tour_Days" asp-controller="Tour" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="DayNumber" class="control-label"></label>
+                <input asp-for="DayNumber" class="form-control" />
+                <p class="text-danger">@ViewData["checking_dayNumber"]</p>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <div class="col-md-10">
+                    <textarea id="mytextarea" name="Description">Description</textarea>
+                </div>
+                <p class="text-danger">@ViewData["checking_Des"]</p>
+            </div>
+            <div class="form-group">
+                <label asp-for="Destination" class="control-label"></label>
+                <input asp-for="Destination" class="form-control" />
+                <p class="text-danger">@ViewData["checking_Destination"]</p>
+            </div>
+            <div class="form-group">
+                <label asp-for="TimeSchedule" class="control-label"></label>
+                <input asp-for="TimeSchedule" class="form-control" />
+                <p class="text-danger">@ViewData["checking_TimeSchedule"]</p>
+            </div>
+            <div class="form-group">
+                <label asp-for="TourId" class="control-label"></label>
+                <select asp-for="TourId" class="form-control" asp-items="ViewBag.TourId"></select>
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<script src="https://cdn.tiny.cloud/1/1rce734xs8e841vlpo0bu99ayrstnd4t367eofm7no2ulpb8/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    tinymce.init({
+        selector: '#mytextarea'
+    });
+</script>
