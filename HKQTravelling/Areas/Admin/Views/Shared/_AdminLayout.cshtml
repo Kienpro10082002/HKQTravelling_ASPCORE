@@ -323,24 +323,6 @@
                     </li>
                     <li class="treeview">
                         <a href="#">
-                            <i class="fa fa-files-o"></i>
-                            <span>Layout Options</span>
-                            <span class="label label-primary pull-right">4</span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="pages/layout/top-nav.html"><i class="fa fa-circle-o"></i> Top Navigation</a></li>
-                            <li><a href="pages/layout/boxed.html"><i class="fa fa-circle-o"></i> Boxed</a></li>
-                            <li><a href="pages/layout/fixed.html"><i class="fa fa-circle-o"></i> Fixed</a></li>
-                            <li><a href="pages/layout/collapsed-sidebar.html"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="pages/widgets.html">
-                            <i class="fa fa-th"></i> <span>Widgets</span> <small class="label pull-right bg-green">new</small>
-                        </a>
-                    </li>
-                    <li class="treeview">
-                        <a href="#">
                             <i class="fa fa-pie-chart"></i>
                             <span>Charts</span>
                             <i class="fa fa-angle-left pull-right"></i>
@@ -353,38 +335,25 @@
                     </li>
                     <li class="treeview">
                         <a href="#">
-                            <i class="fa fa-laptop"></i>
-                            <span>UI Elements</span>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="pages/UI/general.html"><i class="fa fa-circle-o"></i> General</a></li>
-                            <li><a href="pages/UI/icons.html"><i class="fa fa-circle-o"></i> Icons</a></li>
-                            <li><a href="pages/UI/buttons.html"><i class="fa fa-circle-o"></i> Buttons</a></li>
-                            <li><a href="pages/UI/sliders.html"><i class="fa fa-circle-o"></i> Sliders</a></li>
-                            <li><a href="pages/UI/timeline.html"><i class="fa fa-circle-o"></i> Timeline</a></li>
-                            <li><a href="pages/UI/modals.html"><i class="fa fa-circle-o"></i> Modals</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-edit"></i> <span>Forms</span>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="pages/forms/general.html"><i class="fa fa-circle-o"></i> General Elements</a></li>
-                            <li><a href="pages/forms/advanced.html"><i class="fa fa-circle-o"></i> Advanced Elements</a></li>
-                            <li><a href="pages/forms/editors.html"><i class="fa fa-circle-o"></i> Editors</a></li>
-                        </ul>
-                    </li>
-                    <li class="treeview">
-                        <a href="#">
                             <i class="fa fa-table"></i> <span>Tables</span>
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i> Simple tables</a></li>
-                            <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i> Data tables</a></li>
+                            <li><a href="#"><i class="fa fa-circle-o"></i> Booking tables</a></li>
+                            <li>
+                                <a href="#"><i class="fa fa-circle-o"></i> Tour tables <i class="fa fa-angle-left pull-right"></i></a>
+                                <ul class="treeview-menu">
+                                    <li><a href="@Url.Action("Index", "StartLocationsAdministrator", new { area = "Admin" })"><i class="fa fa-circle-o"></i> Điểm khởi hành</a></li>
+                                    <li><a href="@Url.Action("Index", "EndLocationsAdministrator", new { area = "Admin" })"><i class="fa fa-circle-o"></i> Điểm đến</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-circle-o"></i> User tables <i class="fa fa-angle-left pull-right"></i></a>
+                                <ul class="treeview-menu">
+                                    <li><a href="@Url.Action("IndexForAdmin", "AccountAdministrator", new { area = "Admin" })"><i class="fa fa-circle-o"></i> Admin</a></li>
+                                    <li><a href="@Url.Action("IndexForUser", "AccountAdministrator", new { area = "Admin" })"><i class="fa fa-circle-o"></i> User</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </li>
                     <li>
@@ -452,19 +421,23 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                    Dashboard
+                    @if (ViewData["Title"] != null)
+                    {
+                        @ViewData["Title"]
+                    }
+                    else
+                    {
+                        <text>Default Title</text> <!-- Nếu không có dữ liệu, sử dụng giá trị mặc định -->
+                    }
                     <small>Control panel</small>
                 </h1>
-                <ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li class="active">Dashboard</li>
-                </ol>
+                @RenderSection("Breadcrumb") @*Render dòng này để chuyển qua Partial View*@
+                @Html.Partial("_Breadcrumb")
             </section>
 
             <!-- Main content -->
             <section class="content">
                 @RenderBody()
-
             </section><!-- /.content -->
         </div><!-- /.content-wrapper -->
         <footer class="main-footer">

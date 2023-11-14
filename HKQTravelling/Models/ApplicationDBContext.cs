@@ -15,6 +15,13 @@ namespace HKQTravelling.Models
             modelBuilder.Entity<Roles>()
                 .HasIndex(u => u.RoleName)
                 .IsUnique();
+            //1-1 Relationship
+            modelBuilder.Entity<Rules>()
+                .HasKey(r => r.TourId);
+            modelBuilder.Entity<Rules>()
+                .HasOne(r => r.tours)
+                .WithOne()
+                .HasForeignKey<Rules>(r => r.TourId);
             //Same the unique code above
             modelBuilder.Entity<Users>()
                 .HasIndex(u => u.Username)

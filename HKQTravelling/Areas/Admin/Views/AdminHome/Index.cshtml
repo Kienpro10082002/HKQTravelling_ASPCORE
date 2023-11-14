@@ -4,4 +4,12 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<p>This is a administrator site</p>
+@section Breadcrumb {
+    @{
+        ViewData["BreadcrumbTitle"] = "Dashboard";
+    }
+}
+
+<center>
+    <p style="font-size: 50px;">This is a administrator site</p>
+</center>
