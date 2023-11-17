@@ -1,0 +1,93 @@
+﻿@model HKQTravelling.Areas.Admin.Models.UserAndDetailsViewModel
+
+@{
+    ViewData["Title"] = "EditForAdmin";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Breadcrumb {
+    @{
+        ViewData["BreadcrumbTitle"] = "Edit for admin";
+    }
+}
+
+<h2>EditForAdmin</h2>
+
+<h4>Users</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditForAdmin" asp-controller="AccountAdministrator" asp-area="Admin" method="post">
+            @*             <input type="hidden" name="id" value="@Model.User.UserId" /> *@
+            <div class="form-group">
+                <label for="UserName" class="form-label">Tên đăng nhập:</label>
+                <input type="text" name="UserName" class="form-control" value="@Model.User.Username" readonly />
+            </div>
+            <div class="form-group">
+                <label for="Password">Mật khẩu:</label>
+                <input type="password" name="Password" class="form-control" value="@Model.User.Password" />
+            </div>
+            <div class="form-group">
+                <label for="Email" class="form-label">Email:</label>
+                @if (Model.UserDetails != null && !string.IsNullOrEmpty(Model.UserDetails.Email))
+                {
+                    <input type="email" name="Email" class="form-control" value="@Model.UserDetails.Email" />
+                }
+                else
+                {
+                    <input type="email" name="Email" class="form-control" value="Empty@gmail.com" /> <!-- hoặc giá trị mặc định khác nếu cần -->
+                }
+                <p class="text-danger">@ViewData["checking_email"]</p>
+            </div>
+            <div class="form-group">
+                <label for="PhoneNumber" class="form-label">Số điện thoại:</label>
+                <input type="number" name="PhoneNumber" class="form-control" value="@Model.UserDetails.PhoneNumber" />
+                <p class="text-danger">@ViewData["checking_phonenumber"]</p>
+            </div>
+            <div class="form-group">
+                <label for="Surname" class="form-label">Họ và tên lót:</label>
+                <input type="text" name="Surname" class="form-control" value="@Model.UserDetails.Surname" />
+                <p class="text-danger">@ViewData["checking_surname"]</p>
+            </div>
+            <div class="form-group">
+                <label for="Name">Tên:</label>
+                <input type="text" name="Name" class="form-control" value="@Model.UserDetails.Name" />
+                <p class="text-danger">@ViewData["checking_name"]</p>
+            </div>
+            <div class="form-group">
+                <label for="Gender">Giới tính:</label>
+                <select class="form-control" name="Gender">
+                    <option value="Nam" @(Model.UserDetails?.Gender == 1 ? "selected" : "")> Nam </option>
+                    <option value="Nữ" @(Model.UserDetails?.Gender == 2 ? "selected" : "")> Nữ </option>
+                    <option value="Khác" @(Model.UserDetails?.Gender == 3 ? "selected" : "")> Khác </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="NiNumber">Số CCCD:</label>
+                @if (Model.UserDetails != null && !string.IsNullOrEmpty(Model.UserDetails.NiNumber))
+                {
+                    <input type="text" name="NiNumber" class="form-control" value="@Model.UserDetails.NiNumber" />
+                }
+                else
+                {
+                    <input type="text" name="NiNumber" class="form-control" value="Empty" />
+                }
+                <p class="text-danger">@ViewData["checking_niNumber"]</p>
+            </div>
+            <div class="form-group">
+                <label for="Birthdate">Ngày tháng năm sinh:</label>
+                <input type="date" name="Birthdate" class="form-control"
+                @(Model.UserDetails?.Birthdate != null ? $"value=\"{Model.UserDetails.Birthdate.Value.ToString("yyyy-MM-dd")}\"" : "value=\"\"") />
+                <p class="text-danger">@ViewData["checking_birthdate"]</p>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="IndexForAdmin" asp-controller="AccountAdministrator" asp-area="Admin">Back to List</a>
+</div>
+
