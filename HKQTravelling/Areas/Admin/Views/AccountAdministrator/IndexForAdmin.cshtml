@@ -12,7 +12,7 @@
 }
 
 <p>
-    <a asp-action="CreateForAdmin">Create New</a>
+    <a href="@Url.Action("CreateForAdmin", "AccountAdministrator", new { area = "Admin" })">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -39,32 +39,33 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Username)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreationDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdateDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.roles.RoleName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Password)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreationDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdateDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.roles.RoleName)
+                </td>
+                <td>
+                    <a href="@Url.Action("EditForAdmin", "AccountAdministrator", new { area = "Admin", id = item.UserId })">Edit</a> |
+                    <a href="@Url.Action("DetailsForAdmin", "AccountAdministrator", new { area = "Admin", id = item.UserId })">Details</a> |
+                    <a href="@Url.Action("DeleteForAdmin", "AccountAdministrator", new { area = "Admin", id = item.UserId })">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
