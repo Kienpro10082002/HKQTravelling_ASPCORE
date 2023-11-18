@@ -1,0 +1,71 @@
+﻿@model IEnumerable<HKQTravelling.Models.Users>
+
+@{
+    ViewData["Title"] = "IndexForAdmin";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Breadcrumb {
+    @{
+        ViewData["BreadcrumbTitle"] = "IndexForAdmin";
+    }
+}
+
+<p>
+    <a href="@Url.Action("CreateForAdmin", "AccountAdministrator", new { area = "Admin" })">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.roles)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Password)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreationDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdateDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.roles.RoleName)
+                </td>
+                <td>
+                    <a href="@Url.Action("EditForAdmin", "AccountAdministrator", new { area = "Admin", id = item.UserId })">Edit</a> |
+                    <a href="@Url.Action("DetailsForAdmin", "AccountAdministrator", new { area = "Admin", id = item.UserId })">Details</a> |
+                    <a href="@Url.Action("DeleteForAdmin", "AccountAdministrator", new { area = "Admin", id = item.UserId })">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

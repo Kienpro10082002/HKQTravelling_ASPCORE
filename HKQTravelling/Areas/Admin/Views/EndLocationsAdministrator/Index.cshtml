@@ -1,0 +1,42 @@
+﻿@model IEnumerable<HKQTravelling.Models.EndLocations>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Breadcrumb {
+    @{
+        ViewData["BreadcrumbTitle"] = "Index for end location";
+    }
+}
+
+<h2>Index</h2>
+
+<p>
+    <a href="@Url.Action("Create", "EndLocationsAdministrator", new { area = "Admin" })">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EndLocationName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndLocationName)
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit", "EndLocationsAdministrator", new { area = "Admin", id = item.EndLocationId })">Edit</a> |
+                    <a href="@Url.Action("Delete", "EndLocationsAdministrator", new { area = "Admin", id = item.EndLocationId })">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

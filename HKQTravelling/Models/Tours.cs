@@ -55,11 +55,5 @@ namespace HKQTravelling.Models
 
         [ForeignKey("EndLocationId")]
         public EndLocations endLocations { get; set; }
-
-        [Column("RULE_ID")]
-        public long? RuleId { get; set; }
-
-        [ForeignKey("RuleId")]
-        public Rules rules { get; set; }
     }
 }

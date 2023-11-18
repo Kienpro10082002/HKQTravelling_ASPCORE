@@ -188,12 +188,8 @@ namespace HKQTravelling.Migrations
 
             modelBuilder.Entity("HKQTravelling.Models.Rules", b =>
                 {
-                    b.Property<long>("RuleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("RULE_ID");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RuleId"));
+                    b.Property<long>("TourId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("CancelChange")
                         .HasMaxLength(1000)
@@ -220,7 +216,7 @@ namespace HKQTravelling.Migrations
                         .HasColumnType("nvarchar(1000)")
                         .HasColumnName("SURCHARGE");
 
-                    b.HasKey("RuleId");
+                    b.HasKey("TourId");
 
                     b.ToTable("rules");
                 });
@@ -350,10 +346,6 @@ namespace HKQTravelling.Migrations
                         .HasColumnType("int")
                         .HasColumnName("REMAINING");
 
-                    b.Property<long?>("RuleId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("RULE_ID");
-
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("START_DATE");
@@ -381,8 +373,6 @@ namespace HKQTravelling.Migrations
                     b.HasIndex("DiscountId");
 
                     b.HasIndex("EndLocationId");
-
-                    b.HasIndex("RuleId");
 
                     b.HasIndex("StartLocationId");
 
@@ -474,7 +464,6 @@ namespace HKQTravelling.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("UserId"));
 
                     b.Property<DateTime?>("CreationDate")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasColumnName("CREATION_DATE");
 
@@ -536,6 +525,17 @@ namespace HKQTravelling.Migrations
                     b.Navigation("bookings");
                 });
 
+            modelBuilder.Entity("HKQTravelling.Models.Rules", b =>
+                {
+                    b.HasOne("HKQTravelling.Models.Tours", "tours")
+                        .WithOne()
+                        .HasForeignKey("HKQTravelling.Models.Rules", "TourId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("tours");
+                });
+
             modelBuilder.Entity("HKQTravelling.Models.TourDays", b =>
                 {
                     b.HasOne("HKQTravelling.Models.Tours", "tours")
@@ -564,10 +564,6 @@ namespace HKQTravelling.Migrations
                         .WithMany()
                         .HasForeignKey("EndLocationId");
 
-                    b.HasOne("HKQTravelling.Models.Rules", "rules")
-                        .WithMany()
-                        .HasForeignKey("RuleId");
-
                     b.HasOne("HKQTravelling.Models.StartLocations", "startLocations")
                         .WithMany()
                         .HasForeignKey("StartLocationId");
@@ -575,8 +571,6 @@ namespace HKQTravelling.Migrations
                     b.Navigation("discounts");
 
                     b.Navigation("endLocations");
-
-                    b.Navigation("rules");
 
                     b.Navigation("startLocations");
                 });

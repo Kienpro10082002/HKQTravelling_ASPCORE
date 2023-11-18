@@ -1,0 +1,77 @@
+﻿@model HKQTravelling.Models.Users
+
+@{
+    ViewData["Title"] = "CreateForAdmin";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Breadcrumb {
+    @{
+        ViewData["BreadcrumbTitle"] = "Create for admin";
+    }
+}
+
+<h2>CreateForAdmin</h2>
+
+<h4>Users</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateForAdmin" asp-controller="AdminAdministrator" asp-area="Admin" method="post">
+            <div class="form-group">
+                <label for="UserName" class="form-label">Tên đăng nhập:</label>
+                <input type="text" id="UserName" name="UserName" class="form-control" />
+                <p class="text-danger">@ViewData["checking_user"]</p>
+            </div>
+            <div class="form-group">
+                <label for="Password">Mật khẩu:</label>
+                <input type="password" id="Password" name="Password" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="Email" class="form-label">Email:</label>
+                <input type="email" id="Email" name="Email" class="form-control" />
+                <p class="text-danger">@ViewData["checking_email"]</p>
+            </div>
+            <div class="form-group">
+                <label for="PhoneNumber" class="form-label">Số điện thoại:</label>
+                <input type="number" id="PhoneNumber" name="PhoneNumber" class="form-control" />
+                <p class="text-danger">@ViewData["checking_phonenumber"]</p>
+            </div>
+            <div class="form-group">
+                <label for="Surname" class="form-label">Họ và tên lót:</label>
+                <input type="text" id="Surname" name="Surname" class="form-control" />
+                <p class="text-danger">@ViewData["checking_surname"]</p>
+            </div>
+            <div class="form-group">
+                <label for="Name">Tên:</label>
+                <input type="text" id="Name" name="Name" class="form-control" />
+                <p class="text-danger">@ViewData["checking_name"]</p>
+            </div>
+            <div class="form-group">
+                <label for="Gender">Giới tính:</label>
+                <select class="form-control" id="Gender" name="Gender">
+                    <option value="Nam"> Nam </option>
+                    <option value="Nữ"> Nữ </option>
+                    <option value="Khác"> Khác </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="NiNumber">Số CCCD:</label>
+                <input type="text" id="NiNumber" name="NiNumber" class="form-control" />
+                @* <p class="text-danger">@ViewData["checking_niNumber"]</p> *@
+            </div>
+            <div class="form-group">
+                <label for="Birthdate">Ngày tháng năm sinh:</label>
+                <input type="date" id="Birthdate" name="Birthdate" class="form-control" />
+                <p class="text-danger">@ViewData["checking_birthdate"]</p>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a href="@Url.Action("IndexForAdmin", "AccountAdministrator", new { area = "Admin" })">Back to List</a>
+</div>
