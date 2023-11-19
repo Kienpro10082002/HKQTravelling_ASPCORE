@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
@@ -113,51 +114,102 @@ namespace HKQTravelling.Controllers
         [HttpGet]
         public IActionResult AddTour()
         {
-            ViewBag.StartLocationId = new SelectList(_db.startLocations.ToList().OrderBy(n => n.StartLocationName), "StartLocationId", "StartLocationName");
-            ViewBag.EndLocationId = new SelectList(_db.endLocations.ToList().OrderBy(n => n.EndLocationName), "EndLocationId", "EndLocationName");
-            ViewBag.DisId = new SelectList(_db.discounts.ToList().OrderBy(n => n.DiscountId), "DiscountId", "DiscountName");
+            ViewBag.StartLocationName = new SelectList(_db.startLocations.ToList().OrderBy(n => n.StartLocationName), "StartLocationId", "StartLocationName");
+            ViewBag.EndLocationName = new SelectList(_db.endLocations.ToList().OrderBy(n => n.EndLocationName), "EndLocationId", "EndLocationName");
+            ViewBag.DisName = new SelectList(_db.discounts.ToList().OrderBy(n => n.DiscountId), "DiscountId", "DiscountName");
+            ViewBag.StartLocationId = new SelectList(_db.startLocations.ToList().OrderBy(n => n.StartLocationName), "StartLocationId", "StartLocationId");
+            ViewBag.EndLocationId = new SelectList(_db.endLocations.ToList().OrderBy(n => n.EndLocationName), "EndLocationId", "EndLocationId");
+            ViewBag.DisId = new SelectList(_db.discounts.ToList().OrderBy(n => n.DiscountId), "DiscountId", "DiscountId");
             /*            ViewBag.RuleId = new SelectList(_db.rules.ToList().OrderBy(n => n.RuleId), "RuleId", "RuleName");
             */
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> AddTour(Tours tours, TourImages tourImages, IFormFile fileBase)
+        public async Task<IActionResult> AddTour(Tours tours, IFormCollection f)
         {
-            ViewBag.StarLocationId = new SelectList(_db.startLocations.ToList().OrderBy(n => n.StartLocationName), "StartLocationId", "StartLocationName");
-            ViewBag.EndLocationId = new SelectList(_db.endLocations.ToList().OrderBy(n => n.EndLocationName), "EndLocationId", "EndLocationName");
-            ViewBag.DisId = new SelectList(_db.discounts.ToList().OrderBy(n => n.DiscountId), "DiscountId", "DiscountName");
-            /*            ViewBag.RuleId = new SelectList(_db.rules.ToList().OrderBy(n => n.RuleId), "RuleId", "RuleName");
-            */
-            if (fileBase == null)
+            var tourName = f["TourName"].ToString();
+            var price = f["Price"].ToString();
+            var startDate = f["StartDate"].ToString();
+            var endDate = f["EndDate"].ToString();
+            var status = f["Status"].ToString();
+            var updateDate = f["UpdateDate"].ToString();
+            var remaining = f["Remaining"].ToString();
+/*            var disId = f["DiscountId"].ToString();
+            var startLocationId = f["StartLocationId"].ToString();
+            var endLocationId = f["EndLocationId"].ToString();*/
+
+            var disId = Request.Form["DiscountId"].ToString().Split(',')[0];
+            var startLocationId = Request.Form["StartLocationId"].ToString().Split(',')[0];
+            var endLocationId = Request.Form["EndLocationId"].ToString().Split(',')[0];
+
+
+            if (string.IsNullOrEmpty(tourName))
             {
-                ViewBag.Error = "Chon anh bia!";
+                ViewData["checking_tourName"] = "TourName trống!";
+                return View();
+            }
+            else if (string.IsNullOrEmpty(price))
+            {
+                ViewData["checking_price"] = "Price trống!";
+                return View();
+            }
+            else if (string.IsNullOrEmpty(startDate))
+            {
+                ViewData["checking_startDate"] = "StartDate trống!";
+                return View();
+            }
+            else if (string.IsNullOrEmpty(endDate))
+            {
+                ViewData["checking_endDate"] = "EndDate trống!";
+                return View();
+            }
+            else if (string.IsNullOrEmpty(updateDate))
+            {
+                ViewData["checking_UpdateDate"] = "UpdateDate trống!";
+                return View();
+            }
+            else if (string.IsNullOrEmpty(remaining))
+            {
+                ViewData["checking_remaining"] = "Remaining trống!";
+                return View();
+            }
+            else if (string.IsNullOrEmpty(disId))
+            {
+                ViewData["checking_DisId"] = "DisId trống!";
+                return View();
+            }
+            else if (string.IsNullOrEmpty(startLocationId))
+            {
+                ViewData["checking_startLocationId"] = "StartLocationId trống!";
+                return View();
+            }
+            else if (string.IsNullOrEmpty(endLocationId))
+            {
+                ViewData["checking_endLocationId"] = "EndLocationId trống!";
                 return View();
             }
             else
             {
-                if (ModelState.IsValid)
+                var dbTours = new Models.Tours
                 {
-                    var fileName = Path.GetFileName(fileBase.FileName);
-                    var path = Path.Combine(_webHostEnvironment.WebRootPath, "img", fileName);
-                    if (System.IO.File.Exists(path))
-                    {
-                        ViewBag.ThongBao = "Hinh anh da ton tai!";
-                    }
-                    else
-                    {
-                        using (var stream = new FileStream(path, FileMode.Create))
-                        {
-                            await fileBase.CopyToAsync(stream);
-                        }
-                    }
-                    tourImages.ImageUrl = "~/img/" + fileName; // Lưu đường dẫn tương đối của tệp
-                    _db.tours.Add(tours); // Thêm tour vào database
-                    _db.SaveChanges(); // Lưu thay đổi
-                }
+                    TourName = tourName,
+                    Price = int.Parse(price),
+                    StartDate = DateTime.Parse(startDate),
+                    EndDate = DateTime.Parse(endDate),
+                    Status = int.Parse(status),
+                    CreationDate = DateTime.Now,
+                    UpdateDate = DateTime.Parse(updateDate),
+                    Remaining = int.Parse(remaining),
+                    DiscountId = long.Parse(disId),
+                    StartLocationId = long.Parse(startLocationId),
+                    EndLocationId = long.Parse(endLocationId)
+                };
+                _db.tours.Add(dbTours);
+                await _db.SaveChangesAsync();
+                return RedirectToAction("Index", "Tour");
             }
-
-            return RedirectToAction("Index");
         }
+
         [HttpGet]
         public IActionResult Add_Tour_Days()
         {

@@ -53,38 +53,28 @@
                 <div class="form-group">
                     <label asp-for="DiscountId" class="control-label"></label>
                     <div class="cold-md-10">
-                        @Html.DropDownListFor(model => model.DiscountId, ViewBag.DisId as SelectList)
+                        @Html.DropDownListFor(model => model.DiscountId, ViewBag.DisName as SelectList)
+                        <input type="hidden" id="discountId" name="DiscountId" value="@ViewBag.DisId" />
                     </div>
 
                 </div>
                 <div class="form-group">
                     <label asp-for="StartLocationId" class="control-label"></label>
                     <div class="cold-md-10">
-                        @Html.DropDownListFor(model => model.StartLocationId,ViewBag.StartLocationId as SelectList)
+                        @Html.DropDownListFor(model => model.StartLocationId,ViewBag.StartLocationName as SelectList)
+                        <input type="hidden" id="startLocationId" name="startLocationId" value="@ViewBag.StartLocationId" />
                     </div>
-                    @*  <select asp-for="StartLocationId" class ="form-control" asp-items="ViewBag.StartLocationId"></select>
-                *@
+
                 </div>
                 <div class="form-group">
                     <label asp-for="EndLocationId" class="control-label"></label>
                     <div class="cold-md-10">
-                        @Html.DropDownListFor(model => model.EndLocationId, ViewBag.EndLocationId as SelectList)
+                        @Html.DropDownListFor(model => model.EndLocationId, ViewBag.EndLocationName as SelectList)
+                        <input type="hidden" id="endLocationId" name="EndLocationId" value="@ViewBag.EndLocationId" />
                     </div>
-                    @*  <select asp-for="EndLocationId" class ="form-control" asp-items="ViewBag.EndLocationId"></select>
-                *@
+
                 </div>
-                @*  <div class="form-group">
-            <label asp-for="RuleId" class="control-label"></label>
-            <div class="col-md-10">
-            <input type="file" name="fileBase" />
-            </div>
-            </div>
-            <div class="form-group">
-            <label asp-for="RuleId" class="control-label"></label>
-            <div class="cold-md-10">
-            @Html.DropDownListFor(model => model.RuleId, ViewBag.RuleId as SelectList)
-            </div>
-            </div> *@
+                
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-primary" />
                 </div>
