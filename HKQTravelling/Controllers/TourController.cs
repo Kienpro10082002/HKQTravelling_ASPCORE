@@ -10,8 +10,12 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Headers;
+using System.Net.Mail;
 using System.Security.Cryptography;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using MailKit.Net.Smtp;
+using NETCore.MailKit;
+using MimeKit;
 
 
 namespace HKQTravelling.Controllers
@@ -206,9 +210,44 @@ namespace HKQTravelling.Controllers
                 };
                 _db.tours.Add(dbTours);
                 await _db.SaveChangesAsync();
+/*                
+                // Lấy danh sách email từ bảng userDetails
+                var emails = _db.userDetails.Select(u => u.Email).ToList();
+
+                // Tạo nội dung email
+                var emailContent = $"Bạn nhận được 1 thông báo!\nTour mới đầy hấp dẫn\n{tours.TourName}\nHãy đặt ngay để được các ưu đãi hấp dẫn!";
+
+                // Gửi email cho mỗi người dùng
+                foreach (var email in emails)
+                {
+                    await SendEmail(email, "Thông báo tour mới", emailContent);
+                }*/
                 return RedirectToAction("Index", "Tour");
             }
         }
+/*
+        private async Task SendEmail(string email, string subject, string message)
+        {
+            var emailMessage = new MimeMessage();
+            emailMessage.From.Add(new MailboxAddress("Minh Quang", "quangngo7821@gmail.com"));
+            emailMessage.To.Add(new MailboxAddress("", email));
+            emailMessage.Subject = subject;
+            emailMessage.Body = new TextPart("plain") { Text = message };
+
+            using (var client = new MailKit.Net.Smtp.SmtpClient())
+            {
+                // Thay thế "smtp.example.com" bằng tên máy chủ SMTP hợp lệ của dịch vụ email bạn đang sử dụng
+                await client.ConnectAsync("smtp.gmail.com", 587, false);
+                // Thay thế "quangngo7821@gmail.com" và "123" bằng tên người dùng và mật khẩu hợp lệ của bạn
+                client.Authenticate("quangngo7821@gmail.com", "Qu@ng13102002");
+                await client.SendAsync(emailMessage);
+
+                await client.DisconnectAsync(true);
+            }
+        }*/
+
+
+
 
         [HttpGet]
         public IActionResult Add_Tour_Days()
