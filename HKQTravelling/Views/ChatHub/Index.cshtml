@@ -2,49 +2,7 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<style>
-    #chatbox {
-        display: none;
-        width: 300px;
-        height: 400px;
-        border: 1px solid #000;
-        padding: 10px;
-        position: fixed;
-        bottom: 50px;
-        right: 50px;
-        background-color: #fff;
-    }
-
-    #chat-icon {
-        width: 50px;
-        height: 50px;
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        cursor: pointer;
-    }
-</style>
-
 <h2>Index</h2>
-
-<div id="chatbox">
-    <h2>Chat with us</h2>
-    <div id="messages" style="height: 300px; border: 1px solid #000; padding: 5px; overflow-y: scroll;">
-    </div>
-    <input type="text" id="message" style="width: 100%; margin-top: 10px;" />
-</div>
-<img id="chat-icon" src="chat-icon.png" />
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#chat-icon').click(function () {
-            $('#chatbox').toggle();
-        });
-    });
-</script>
-
-<!-- Messenger Plugin chat Code -->
 <div id="fb-root"></div>
 
 <!-- Your Plugin chat code -->
@@ -74,4 +32,3 @@
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
 </script>
-
