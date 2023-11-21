@@ -35,6 +35,23 @@ namespace HKQTravelling.Controllers
         public IActionResult Index()
         {
             IEnumerable<Tours> objTourList = _db.tours.ToList();
+            var startLocations = _db.startLocations.ToList();
+            var endLocations = _db.endLocations.ToList();
+            var tourImages = _db.tourImages.ToList();
+
+            var tourImageUrls = new Dictionary<long, string>();
+            foreach (var tour in objTourList)
+            {
+                var image = tourImages.FirstOrDefault(ti => ti.TourId == tour.TourId);
+                if (image != null)
+                {
+                    tourImageUrls[tour.TourId] = image.ImageUrl;
+                }
+            }
+
+            ViewBag.StartLocations = new SelectList(startLocations, "StartLocationId", "StartLocationName");
+            ViewBag.EndLocations = new SelectList(endLocations, "EndLocationId", "EndLocationName");
+            ViewBag.TourImages = tourImages;
             return View(objTourList);
         }
         #endregion
@@ -138,9 +155,9 @@ namespace HKQTravelling.Controllers
             var status = f["Status"].ToString();
             var updateDate = f["UpdateDate"].ToString();
             var remaining = f["Remaining"].ToString();
-/*            var disId = f["DiscountId"].ToString();
-            var startLocationId = f["StartLocationId"].ToString();
-            var endLocationId = f["EndLocationId"].ToString();*/
+            /*            var disId = f["DiscountId"].ToString();
+                        var startLocationId = f["StartLocationId"].ToString();
+                        var endLocationId = f["EndLocationId"].ToString();*/
 
             var disId = Request.Form["DiscountId"].ToString().Split(',')[0];
             var startLocationId = Request.Form["StartLocationId"].ToString().Split(',')[0];
@@ -201,7 +218,7 @@ namespace HKQTravelling.Controllers
                     StartDate = DateTime.Parse(startDate),
                     EndDate = DateTime.Parse(endDate),
                     Status = int.Parse(status),
-                    CreationDate = DateTime.Now,
+                    CreationDate = DateTime.Parse(updateDate),
                     UpdateDate = DateTime.Parse(updateDate),
                     Remaining = int.Parse(remaining),
                     DiscountId = long.Parse(disId),
@@ -210,41 +227,41 @@ namespace HKQTravelling.Controllers
                 };
                 _db.tours.Add(dbTours);
                 await _db.SaveChangesAsync();
-/*                
-                // Lấy danh sách email từ bảng userDetails
-                var emails = _db.userDetails.Select(u => u.Email).ToList();
+                /*                
+                                // Lấy danh sách email từ bảng userDetails
+                                var emails = _db.userDetails.Select(u => u.Email).ToList();
 
-                // Tạo nội dung email
-                var emailContent = $"Bạn nhận được 1 thông báo!\nTour mới đầy hấp dẫn\n{tours.TourName}\nHãy đặt ngay để được các ưu đãi hấp dẫn!";
+                                // Tạo nội dung email
+                                var emailContent = $"Bạn nhận được 1 thông báo!\nTour mới đầy hấp dẫn\n{tours.TourName}\nHãy đặt ngay để được các ưu đãi hấp dẫn!";
 
-                // Gửi email cho mỗi người dùng
-                foreach (var email in emails)
-                {
-                    await SendEmail(email, "Thông báo tour mới", emailContent);
-                }*/
+                                // Gửi email cho mỗi người dùng
+                                foreach (var email in emails)
+                                {
+                                    await SendEmail(email, "Thông báo tour mới", emailContent);
+                                }*/
                 return RedirectToAction("Index", "Tour");
             }
         }
-/*
-        private async Task SendEmail(string email, string subject, string message)
-        {
-            var emailMessage = new MimeMessage();
-            emailMessage.From.Add(new MailboxAddress("Minh Quang", "quangngo7821@gmail.com"));
-            emailMessage.To.Add(new MailboxAddress("", email));
-            emailMessage.Subject = subject;
-            emailMessage.Body = new TextPart("plain") { Text = message };
+        /*
+                private async Task SendEmail(string email, string subject, string message)
+                {
+                    var emailMessage = new MimeMessage();
+                    emailMessage.From.Add(new MailboxAddress("Minh Quang", "quangngo7821@gmail.com"));
+                    emailMessage.To.Add(new MailboxAddress("", email));
+                    emailMessage.Subject = subject;
+                    emailMessage.Body = new TextPart("plain") { Text = message };
 
-            using (var client = new MailKit.Net.Smtp.SmtpClient())
-            {
-                // Thay thế "smtp.example.com" bằng tên máy chủ SMTP hợp lệ của dịch vụ email bạn đang sử dụng
-                await client.ConnectAsync("smtp.gmail.com", 587, false);
-                // Thay thế "quangngo7821@gmail.com" và "123" bằng tên người dùng và mật khẩu hợp lệ của bạn
-                client.Authenticate("quangngo7821@gmail.com", "Qu@ng13102002");
-                await client.SendAsync(emailMessage);
+                    using (var client = new MailKit.Net.Smtp.SmtpClient())
+                    {
+                        // Thay thế "smtp.example.com" bằng tên máy chủ SMTP hợp lệ của dịch vụ email bạn đang sử dụng
+                        await client.ConnectAsync("smtp.gmail.com", 587, false);
+                        // Thay thế "quangngo7821@gmail.com" và "123" bằng tên người dùng và mật khẩu hợp lệ của bạn
+                        client.Authenticate("quangngo7821@gmail.com", "Qu@ng13102002");
+                        await client.SendAsync(emailMessage);
 
-                await client.DisconnectAsync(true);
-            }
-        }*/
+                        await client.DisconnectAsync(true);
+                    }
+                }*/
 
 
 
@@ -371,5 +388,52 @@ namespace HKQTravelling.Controllers
 
         #endregion
 
+        #region Search by Location
+        [HttpGet]
+        public IActionResult GetToursByStartLocation(int? startLocationId)
+        {
+            IEnumerable<Tours> TourList = _db.tours.ToList();
+            if (startLocationId.HasValue)
+            {
+                TourList = _db.tours.Where(t => t.StartLocationId == startLocationId).ToList();
+            }
+            else
+            {
+                TourList = _db.tours.ToList();
+            }
+            return PartialView("_ToursPricePartial", TourList);
+        }
+
+        [HttpGet]
+        public IActionResult GetToursByEndLocation(int? endLocationId)
+        {
+            IEnumerable<Tours> TourList = _db.tours.ToList();
+            if (endLocationId.HasValue)
+            {
+                TourList = _db.tours.Where(t => t.EndLocationId == endLocationId).ToList();
+            }
+            else
+            {
+                TourList = _db.tours.ToList();
+            }
+            return PartialView("_ToursPricePartial", TourList);
+        }
+        #endregion
+
+        #region Sorted by price
+        [HttpGet]
+        public IActionResult GetToursSortedByPriceAsc()
+        {
+            var tours = _db.tours.OrderBy(t => t.Price).ToList();
+            return PartialView("_ToursPricePartial", tours);
+        }
+        [HttpGet]
+        public IActionResult GetToursSortedByPriceDesc()
+        {
+            var tours = _db.tours.OrderByDescending(t => t.Price).ToList();
+            return PartialView("_ToursPricePartial", tours);
+        }
+
+        #endregion
     }
 }

@@ -354,7 +354,7 @@ label {
 }
 
 .list-tour__right {
-    width: 40%;
+    width: 55%;
     text-align: right;
 }
 
@@ -2103,3 +2103,43 @@ tr:nth-child(even) {
 }
 
 /* End Footer */
+
+/* New */
+
+.filter-container {
+    float: left;
+    width: 250px;
+    margin: 0 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.tab-pane {
+    margin-left: 270px;
+}
+
+
+.filter-header {
+    text-align: center;
+}
+
+.filter-group {
+    margin-bottom: 10px;
+}
+
+label {
+    font-weight: bold;
+}
+
+select {
+    width: 100%;
+}
+
+input {
+    width: 100%;
+    padding: 5px;
+}
+.hidden {
+    display: none;
+}

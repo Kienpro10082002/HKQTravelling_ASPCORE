@@ -17,7 +17,12 @@ namespace HKQTravelling.Controllers
         public AccountController(ApplicationDBContext data)
         {
             this.data = data;
-           
+
+        }
+
+        public IActionResult Index()
+        {
+            return RedirectToAction("Profile", "Account");
         }
 
         #region features
@@ -135,10 +140,10 @@ namespace HKQTravelling.Controllers
                 ViewData["checking_birthdate"] = "Vui lòng nhập ngày sinh của bạn.";
                 return View();
             }
-            else if (CheckAccountInformation.ValidateBirthdate(DateTime.Parse(birthdate))==false)
+            else if (CheckAccountInformation.ValidateBirthdate(DateTime.Parse(birthdate)) == false)
             {
-                    ViewData["checking_birthdate"] = "Lưu ý tuổi không dưới 5 và trên 90 bạn ơi ";
-                    return View();
+                ViewData["checking_birthdate"] = "Lưu ý tuổi không dưới 5 và trên 90 bạn ơi ";
+                return View();
             }
             else
             {
@@ -157,7 +162,7 @@ namespace HKQTravelling.Controllers
                     PhoneNumber = phone_number,
                     Surname = surname,
                     Name = name,
-                    Gender = gender == "Nam" ? 1 : 2,
+                    Gender = gender == "1" ? 1 : 2,
                     Birthdate = Convert.ToDateTime(birthdate),
                     NiNumber = niNumber,
                     Age = Caculation.caculateAge(Convert.ToDateTime(birthdate)),
@@ -166,7 +171,7 @@ namespace HKQTravelling.Controllers
                 data.users.Add(dbUser);
                 data.userDetails.Add(dbUserDetails);
                 await data.SaveChangesAsync();
-                return RedirectToAction("Login", "Account");                                  
+                return RedirectToAction("Login", "Account");
             }
         }
         [HttpGet]
@@ -193,10 +198,21 @@ namespace HKQTravelling.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> User()
+        public IActionResult Logout()
         {
+            // Xóa tất cả các thông tin liên quan đến phiên đăng nhập
+            HttpContext.Session.Clear();
 
+
+            return RedirectToAction("Index", "Home");
+        }
+        #endregion
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> ChangePassword()
+        {
             // Kiểm tra xem khóa "user_id" có tồn tại trong Session không
             if (HttpContext.Session.TryGetValue("user_id", out byte[] userIdBytes))
             {
@@ -215,14 +231,63 @@ namespace HKQTravelling.Controllers
                 return RedirectToAction("Login", "Account");
             }
         }
-        public async Task<IActionResult> Logout()
-        {
-            // Xóa tất cả các thông tin liên quan đến phiên đăng nhập
-            HttpContext.Session.Clear();
 
-          
-            return RedirectToAction("Index", "Home");
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(FormCollection collection)
+        {
+            // Kiểm tra xem khóa "user_id" có tồn tại trong Session không
+            if (HttpContext.Session.TryGetValue("user_id", out byte[] userIdBytes))
+            {
+
+                // Nếu tồn tại, bạn có thể chuyển đổi giá trị từ mảng byte sang kiểu dữ liệu phù hợp
+                long userId = BitConverter.ToInt64(userIdBytes, 0);
+                var user = data.users.FirstOrDefault(x => x.UserId == userId);
+
+                // Tiếp tục xử lý tại đây với userId
+
+                return View(user);
+            }
+            else
+            {
+                // Nếu "user_id" không tồn tại trong Session, chuyển hướng đến trang đăng ký
+                return RedirectToAction("Login", "Account");
+            }
+
+
+
+
         }
-        #endregion
+
+        /* //Get Session["user_account"] are logged in before
+         var userAccount = (user_account)Session["user_account"];
+
+         //Get collection from changePassword.html with the attribute is name
+         var pass = mahoamd5(collection["current_password"]);
+         var new_pass = mahoamd5(collection["new_password"]);
+         var confirm_pass = mahoamd5(collection["confirm_password"]);
+
+         //create variable and check info
+         var check_user = data.user_accounts.SingleOrDefault(model => model.user_name == userAccount.user_name && model.user_password == userAccount.user_password);
+         var check_password = data.user_accounts.SingleOrDefault(model => model.user_password == pass);
+
+         if (check_user == null)
+         {
+             ViewData["WrongUser"] = "Vui lòng nhập đúng thông tin";
+         }
+         else if (check_password == null)
+         {
+             ViewData["WrongPassword"] = "Vui lòng nhập đúng mật khẩu";
+         }
+         else if (confirm_pass != new_pass)
+         {
+             ViewData["WrongNewPassword"] = "Vui lòng nhập khớp mật khẩu mới";
+         }
+         else //successful
+         {
+             check_user.user_password = confirm_pass;
+         }
+         data.SubmitChanges();
+         return RedirectToAction("Index", "Home");
+     }*/
     }
 }

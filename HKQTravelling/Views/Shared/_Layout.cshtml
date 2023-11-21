@@ -51,11 +51,11 @@
             @RenderBody()
         </main>
     </div>
-    <div id="fb-root"></div>
+@*     <div id="fb-root"></div>
 
     <!-- Your Plugin chat code -->
     <div id="fb-customer-chat" class="fb-customerchat">
-    </div>
+    </div> *@
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2023 - HKQTravelling - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
@@ -65,7 +65,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script>
+@*     <script>
         var chatbox = document.getElementById('fb-customer-chat');
         chatbox.setAttribute("page_id", "160600553809729");
         chatbox.setAttribute("attribution", "biz_inbox");
@@ -87,7 +87,7 @@
             js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
-    </script>
+    </script> *@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
