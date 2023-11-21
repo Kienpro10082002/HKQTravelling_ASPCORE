@@ -4,9 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - HKQTravelling</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/HKQTravelling.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/User/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/User/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/User/HKQTravelling.styles.css" asp-append-version="true" />
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#mytextarea'
+        });
+    </script>
 </head>
 <body>
     <header>
@@ -20,12 +26,21 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Tour" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                             @Html.Partial("_loginPatrial") 
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Tour" asp-action="AddTour">Add Tour</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Tour" asp-action="Add_Tour_Days">Add Tour Days</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="ChatHub" asp-action="Index">Test Chat Hub</a>
+                        </li>
+                        @Html.Partial("_loginPatrial")
                     </ul>
                 </div>
             </div>
@@ -36,15 +51,43 @@
             @RenderBody()
         </main>
     </div>
+@*     <div id="fb-root"></div>
 
+    <!-- Your Plugin chat code -->
+    <div id="fb-customer-chat" class="fb-customerchat">
+    </div> *@
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2023 - HKQTravelling - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
+
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+@*     <script>
+        var chatbox = document.getElementById('fb-customer-chat');
+        chatbox.setAttribute("page_id", "160600553809729");
+        chatbox.setAttribute("attribution", "biz_inbox");
+    </script>
+
+    <!-- Your SDK code -->
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                xfbml: true,
+                version: 'v18.0'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script> *@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

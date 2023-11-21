@@ -1,0 +1,191 @@
+﻿<style>
+    .footer{
+        background-color: initial !important;
+    }
+    .card{
+        border: initial !important;
+    }
+</style>
+
+<form asp-action="DetailTour" asp-controller="Tour" method="post">
+    <div class="container float-lg-end">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    @if (ViewBag.ImageUrls != null)
+                    {
+                        foreach (var imageUrl in ViewBag.ImageUrls)
+                        {
+                            <div class="col-lg-4 col-md-4 col-sm-6 mySlides">
+                                <img src="~/User/img/Tour/@imageUrl" class="img-fluid" alt="Tour Image">
+                            </div>
+                        }
+                    }
+                    <div class="col-lg-7 col-md-7 col-sm-6">
+                        @if (ViewBag.Detail != null)
+                        {
+                            <p>@ViewBag.Detail.TourName</p>
+                            <h2 class="mt-5">
+                                <small class="text-success">@String.Format("{0:0,0}", ViewBag.Detail.Price) VND</small>
+                            </h2>
+                            <input type="hidden" id="price-adult" value="@ViewBag.Detail.Price" />
+                            <input type="hidden" id="tourId" name="tourId" value="@ViewBag.Detail.TourId" />
+                        }
+                        @if (ViewBag.TourDays != null)
+                        {
+                            foreach (var tourDay in ViewBag.TourDays)
+                            {
+                                <p>@tourDay.DayNumber</p>
+                                @Html.Raw(tourDay.Description)
+                                <p>@tourDay.Destination</p>
+                                <p>@tourDay.TimeSchedule</p>
+                            }
+                        }
+
+
+                        @*                     <form method="post">
+                        <button type="submit" class="btn btn-primary">Book Now</button>
+                        </form> *@
+                    </div>
+                </div>
+            </div>
+            <div class="booking">
+                <h1>Lịch khởi hành & giá</h1>
+                <div class="form-group">
+                    <label for="ngaykhoihanh">Ngày khởi hành:</label>
+                    @if (@ViewBag.Detail != null)
+                    {
+                        <p>@ViewBag.Detail.StartDate</p>
+                    }
+                </div>
+                <div class="form-group">
+                    <label for="nguoilon">Người lớn:</label>
+                    <input type="number" class="form-control" id="nguoilon" name="nguoilon" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="treem">Trẻ em:</label>
+                    <input type="number" class="form-control" id="treem" name="treem" value="0">
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary btn-tinhTong">Tính toán</button>
+                </div>
+                <div class="total">
+                    <h2>Tổng cộng:</h2>
+                    <p id="tongcong" name="tongcong"></p>
+                    <input type="hidden" id="hiddenTongCong" name="tongcong" />
+                </div>
+                <div class="request">
+                    <button class="btn btn-success">Thanh toán</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<script>
+    function hienThiBang() {
+        // Lưu trữ giá trị hiện tại của mỗi select tuổi
+        var giaTriHienTai = [];
+        var selects = document.getElementsByClassName("form-control");
+        for (var i = 0; i < selects.length; i++) {
+            giaTriHienTai.push(selects[i].value);
+        }
+        // Đặt lại giá trị cho select tuổi
+        if (giaTriHienTai[i]) {
+            document.getElementById("age" + i).value = giaTriHienTai[i];
+        }
+
+        // Xóa các bảng hiện tại
+        var bangHienTai = document.getElementsByTagName("table");
+        while (bangHienTai[0]) {
+            bangHienTai[0].parentNode.removeChild(bangHienTai[0]);
+        }
+
+        var soLuongTreEm = document.getElementById("treem").value;
+        for (var i = 1; i <= soLuongTreEm; i++) {
+            var bang = document.createElement("table");
+            bang.innerHTML = `
+                                          <tbody class="child-booking">
+                                              <td colspan="3">
+                                                <div class="form-group">
+                                                  <label for="age${i}">Tuổi trẻ ${i}: </label>
+                                                  <select class="form-control" id="age${i}">
+                                                    <option value="0-2">0-2</option>
+                                                    <option value="3-11">3-11</option>
+                                                    <option value="12-18">12-18</option>
+                                                  </select>
+                                                </div>
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        `;
+            // Thay đổi dòng này để thêm bảng vào phần tử mong muốn
+            document.querySelector(".booking").appendChild(bang);
+
+
+        }
+    }
+
+    document.getElementById("treem").addEventListener("change", hienThiBang);
+
+    var slideIndex = 0;
+    showSlides();
+
+    function showSlides() {
+        var i;
+        var slides = document.getElementsByClassName("mySlides");
+
+        // Nếu chỉ có một slide, dừng hàm
+        if (slides.length <= 1) {
+            return;
+        }
+
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+
+        slideIndex++;
+        if (slideIndex > slides.length) { slideIndex = 1 }
+
+        slides[slideIndex - 1].style.display = "block";
+
+        setTimeout(showSlides, 2000); // Thay đổi hình ảnh sau mỗi 2 giây
+    }
+
+    function tinhTong() {
+        var soNguoiLon = document.getElementById("nguoilon").value;
+        var soTreEm = document.getElementById("treem").value;
+        console.log(soNguoiLon);
+        var giaTriNguoiLon = parseInt(document.getElementById("price-adult").value);
+
+        var tongCong = giaTriNguoiLon * soNguoiLon;
+
+        for (var i = 1; i <= soTreEm; i++) {
+            var tuoiTreEm = document.getElementById("age" + i).value;
+            switch (tuoiTreEm) {
+                case "0-2":
+                    // Miễn phí
+                    break;
+                case "3-11":
+                    // Giảm 50%
+                    tongCong += giaTriNguoiLon * 0.5;
+                    break;
+                case "12-18":
+                    // Giảm 20%
+                    tongCong += giaTriNguoiLon * 0.8;
+                    break;
+            }
+        }
+
+        // Định dạng số
+        var tongCongFormatted = tongCong.toLocaleString('vi-VN');
+
+        document.getElementById("tongcong").innerHTML = tongCongFormatted + " VND";
+        document.getElementById('hiddenTongCong').value = tongCong;
+    }
+
+    document.querySelector(".btn-tinhTong").addEventListener("click", tinhTong);
+
+
+</script>

@@ -1,0 +1,96 @@
+﻿@using HKQTravelling.Models
+
+<form asp-action="Payments" asp-controller="Tour" method="post">
+    <div class="container float-lg-end">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-7 col-md-7 col-sm-6">
+                        <p>Hoten: </p>
+                        <input type="text" id="Name" name="Name" value="@Context.Session.GetString("fullName")" />
+                        <p>Email: </p>
+                        <input type="text" id="Email" name="Email" value="@Context.Session.GetString("Email")" />
+                    </div>
+                    <div class="col-lg-7 col-md-7 col-sm-6">
+                        <input type="hidden" id="bookingId" name="BookingId" value="@ViewBag.Booking.BookingId" />
+
+                        <p>Ngày đặt: </p>
+                        <input type="datetime" id="BookingDate" name="BookingDate" value="@ViewBag.Booking.BookingDate" />
+                        <p>Số lượng người lớn: </p>
+                        <input type="text" id="NumAldults" name="NumAldults" value="@ViewBag.Booking.NumAdults" />
+                        <p>Số lượng trẻ em: </p>
+                        <input type="text" id="NumKids" name="NumKids" value="@ViewBag.Booking.NumKids" />
+                        <p>Số tiền cần phải thanh toán: </p>
+                        <input type="text" id="TotalMoney" name="TotalMoney" value="@String.Format("{0:0,0}",ViewBag.Booking.PriceAdults) VND" />
+                    </div>
+
+                </div>
+            </div>
+            <div style="margin-top: 10px; display: flex; justify-content: center;">
+                <div id="paypal-button-container"></div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+
+
+@*Thanh toán Paypal*@
+
+<script src="https://www.paypal.com/sdk/js?client-id=AXhgZLHBNSAsv9TksGFMmrR7aYqG5xOM_L3uqUZb96xKFGg2kD9p3v7UDbMDGDoFGW4SIc3qiLA87gix"></script>
+<script>
+    var getValue = @ViewBag.Booking.PriceAdults;
+    var ValueInUsd = (getValue / 24000);
+    var roundedValueInUsd = Math.ceil(ValueInUsd);
+    //< !--Đoạn mã script nhận paypal-- >
+    paypal.Buttons({
+        createOrder: function (data, actions) {
+            // This function sets up the details of the transaction, including the amount and line item details.
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: roundedValueInUsd
+                    }
+                }]
+            });
+        },
+        onApprove: function (data, actions) {
+            // This function captures the funds from the transaction.
+            return actions.order.capture().then(function (details) {
+                // This function shows a transaction success message to your buyer.
+
+                alert('Thanh toán Paypal thành công bởi ' + details.payer.name.given_name);
+                setTimeout(2000);
+                // Call your controller here
+                $.ajax({
+                    url: '/Tour/Payments',
+                    type: 'POST',
+                    data: {
+                        BookingId: document.getElementById('bookingId').value,
+                        TotalMoney: document.getElementById('TotalMoney').value.replace(/,/g, '').replace(' VND', '')
+                    },
+                    success: function (response) {
+                        // Handle success
+                        console.log('Payment successful');
+                        // Show a success message
+                        alert('Thanh toán thành công! Đang chuyển hướng...');
+
+                        // Redirect to the 'Index' action of the 'Tour' controller after 2 seconds
+                        setTimeout(function () {
+                            window.location.href = '/Tour/Index';
+                        }, 2000);
+                    },
+                    error: function (error) {
+                        // Handle error
+                        console.log('Payment failed');
+                    }
+                });
+            });
+        }
+    }).render('#paypal-button-container');
+                        //This function displays Smart Payment Buttons on your web page.
+</script>
+
+
