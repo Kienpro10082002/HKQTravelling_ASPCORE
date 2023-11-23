@@ -1,5 +1,10 @@
 ﻿@using HKQTravelling.Models;
-@model IEnumerable<Tours>
+@using X.PagedList
+@model IPagedList<Tours>
+
+
+
+
 <div class="bread-crumb">
     <div class="container">
         <ul class="breadcrumb">
@@ -18,20 +23,20 @@
                     <h3>Tour</h3>
                 </div>
             </div>
-            <div class="tab-search__right">
-                <span class="navtab-text">Sắp xếp theo : </span>
-                <ul class="nav nav-pills navtab-combo">
-                    <li class="nav-item nav-item-combo">
-                        <a class="nav-link nav-link-combo PriceAsc" data-toggle="pill" href="#hottour2"><i class="fas fa-long-arrow-alt-up"></i>Giá tăng dần</a>
-                    </li>
-                    <li class="nav-item nav-item-combo">
-                        <a class="nav-link nav-link-combo PriceDesc" data-toggle="pill" href="#hottour3"><i class="fas fa-long-arrow-alt-down"></i>Giá giảm dần</a>
-                    </li>
-                </ul>
-            </div>
         </div>
     </div>
     <div class="tab-content box__content">
+        <div class="tab-search__right">
+            <span class="navtab-text">Sắp xếp theo : </span>
+            <ul class="nav nav-pills navtab-combo">
+                <li class="nav-item nav-item-combo">
+                    <a class="nav-link nav-link-combo PriceAsc" data-toggle="pill" href="#hottour2"><i class="fas fa-long-arrow-alt-up"></i>Giá tăng dần</a>
+                </li>
+                <li class="nav-item nav-item-combo">
+                    <a class="nav-link nav-link-combo PriceDesc" data-toggle="pill" href="#hottour3"><i class="fas fa-long-arrow-alt-down"></i>Giá giảm dần</a>
+                </li>
+            </ul>
+        </div>
         <div class="filter-container">
             <div class="filter-header">
                 <h2>Lọc kết quả</h2>
@@ -56,22 +61,6 @@
                             <option value="@location.Value">@location.Text</option>
                         }
                     </select>
-                </div>
-                <div class="filter-group">
-                    <label for="start-date">Ngày khởi hành</label>
-                    <input type="date" name="start-date" id="start-date">
-                </div>
-                <div class="filter-group">
-                    <label for="end-date">Ngày kết thúc</label>
-                    <input type="date" name="end-date" id="end-date">
-                </div>
-                <div class="form-group">
-                    <label for="number-of-days">Số ngày</label>
-                    <input type="number" class="form-control" name="number-of-days" id="number-of-days" value="1">
-                </div>
-                <div class="filter-group">
-                    <label for="budget">Ngân sách</label>
-                    <input type="number" name="budget" id="budget" min="0" step="100000">
                 </div>
             </div>
         </div>
@@ -123,20 +112,62 @@
                     </div>
                 }
             </div>
+           
         </div>
         <div id="toursContainer" class="hidden">
             @await Html.PartialAsync("_ToursPricePartial", Model)
         </div>
-
+    </div>
+    <div class="MenuTrang" style="display: flex;justify-content: center;padding-top: 16px;">
+        @await Html.PartialAsync("_PagedListPager", Model)
     </div>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+    // Search by startLocationId
+    $(document).ready(function () {
+        $('.select-startLocation').change(function () {
+            $('.tour-item').hide();
+            $('.MenuTrang').hide();
+            var startLocationId = $(this).val();
+            console.log(startLocationId);
+            $.ajax({
+                url: '/Tour/GetToursByStartLocation',
+                type: 'GET',
+                data: { startLocationId: startLocationId },
+                success: function (data) {
+                    $('#toursContainer').html(data);
+                }
+            });
+        });
+    });
+</script>
+<script>
+    // Search by endLocationId
+    $(document).ready(function () {
+        $('.select-endLocation').change(function () {
+            $('.tour-item').hide();
+            $('.MenuTrang').hide();
+            var endLocationId = $(this).val();
+            console.log(endLocationId);
+            $.ajax({
+                url: '/Tour/GetToursByEndLocation',
+                type: 'GET',
+                data: { endLocationId : endLocationId },
+                success: function (data) {
+                    $('#toursContainer').html(data);
+                }
+            });
+        });
+    });
+</script>
+<script>
     //Sort price by Asc
     $(document).ready(function () {
         $('.PriceAsc').click(function (e) {
             $('.tour-item').hide();
+            $('.MenuTrang').hide();
             e.preventDefault();
 
             var sortType = $(this).text().trim(); // Lấy nội dung của nút được nhấn
@@ -159,6 +190,7 @@
     $(document).ready(function () {
         $('.PriceDesc').click(function (e) {
             $('.tour-item').hide();
+            $('.MenuTrang').hide();
             e.preventDefault();
 
             var sortType = $(this).text().trim(); // Lấy nội dung của nút được nhấn
@@ -173,42 +205,6 @@
                     }
                 });
             }
-        });
-    });
-</script>
-<script>
-    // Search by startLocationId
-    $(document).ready(function () {
-        $('.select-startLocation').change(function () {
-            $('.tour-item').hide();
-            var startLocationId = $(this).val();
-            console.log(startLocationId);
-            $.ajax({
-                url: '/Tour/GetToursByStartLocation',
-                type: 'GET',
-                data: { startLocationId: startLocationId },
-                success: function (data) {
-                    $('#toursContainer').html(data);
-                }
-            });
-        });
-    });
-</script>
- <script>
-    // Search by endLocationId
-    $(document).ready(function () {
-        $('.select-endLocation').change(function () {
-            $('.tour-item').hide();
-            var endLocationId = $(this).val();
-            console.log(endLocationId);
-            $.ajax({
-                url: '/Tour/GetToursByEndLocation',
-                type: 'GET',
-                data: { endLocationId : endLocationId },
-                success: function (data) {
-                    $('#toursContainer').html(data);
-                }
-            });
         });
     });
 </script>

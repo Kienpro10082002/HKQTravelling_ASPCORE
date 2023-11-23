@@ -1,0 +1,13 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@model IPagedList
+@{
+    ViewData["PagedListRenderOptions"] = new PagedListRenderOptions { DisplayLinkToFirstPage = PagedListDisplayMode.Always, DisplayLinkToLastPage = PagedListDisplayMode.Always };
+}
+@Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page = page }),
+    new X.PagedList.Web.Common.PagedListRenderOptions
+{
+    LiElementClasses = new string[] { "page-item" },
+    PageClasses = new string[] { "page-link" }
+})

@@ -18,7 +18,7 @@
                             <div class="info d-flex align-items-center mb-md-3">
 
                                 <div>
-                                    <img src="~/../../../../../đồ án cn/của kiên/hkqtravelling_aspcore/hkqtravelling/wwwroot/img/img customer/21104.png" style="height: 50px; width: 50px; " />
+                                    <img src="~/User/img/Logo/avt.png" style="height: 50px; width: 50px; " />
                                 </div>
 
                                 <div style="margin-left: 5px;">
@@ -52,8 +52,8 @@
                                     <li>
                                         <div class="link"><i class="fa fa-code"></i> Lịch sử <i class="fa fa-chevron-down"></i></div>
                                         <ul class="submenu">
-                                            <li> <a href="#">Phiếu đặt tour</a></li>
-                                            <li><a href="#">Tour đã hoàn thành</a> </li>
+                                            <li><a href="#">Phiếu đặt tour</a></li>
+                                            <li class="tour_booked"><a href="@Url.Action("TourBooked","Account")">Tour đã hoàn thành</a> </li>
                                         </ul>
                                     </li>
                                     <li>
@@ -75,43 +75,45 @@
                         </div>
                     </div>
 
-                    <div class="col-md-9 col-12 right ps-md-4">
+                    <div class=" class_render_body col-md-9 col-12 right ps-md-4">
                         <div class="wrapper p-md-4">
                             @RenderBody()
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
-        <script>
-            // Lấy tất cả các phần tử HTML của button chỉnh sửa và form chỉnh sửa
-            var editButtons = document.querySelectorAll('.toggle-edit-form');
-            var editForms = document.querySelectorAll('.edit-form');
-            var editing = false;
-
-            // Lắng nghe sự kiện click cho mỗi button chỉnh sửa
-            editButtons.forEach(function (editButton, index) {
-                // Lắng nghe sự kiện click vào button chỉnh sửa
-                editButton.addEventListener('click', function () {
-                    var editForm = editForms[index];
-                    if (!editing) {
-                        // Thêm lớp active cho form chỉnh sửa để hiển thị
-                        editForm.classList.add('active');
-                        // Đổi nội dung của button thành "Hủy"
-                        editButton.textContent = 'Hủy';
-                        editing = true;
-                    } else {
-                        // Xóa lớp active khỏi form chỉnh sửa để ẩn đi
-                        editForm.classList.remove('active');
-                        // Đổi nội dung của button thành "Chỉnh sửa"
-                        editButton.textContent = 'Chỉnh sửa';
-                        editing = false;
-                    }
-                });
-            });
-        </script>
-
     </main>
 }
 <div>
 </div>
+
+
+<script>
+    // Lấy tất cả các phần tử HTML của button chỉnh sửa và form chỉnh sửa
+    var editButtons = document.querySelectorAll('.toggle-edit-form');
+    var editForms = document.querySelectorAll('.edit-form');
+    var editing = false;
+
+    // Lắng nghe sự kiện click cho mỗi button chỉnh sửa
+    editButtons.forEach(function (editButton, index) {
+        // Lắng nghe sự kiện click vào button chỉnh sửa
+        editButton.addEventListener('click', function () {
+            var editForm = editForms[index];
+            if (!editing) {
+                // Thêm lớp active cho form chỉnh sửa để hiển thị
+                editForm.classList.add('active');
+                // Đổi nội dung của button thành "Hủy"
+                editButton.textContent = 'Hủy';
+                editing = true;
+            } else {
+                // Xóa lớp active khỏi form chỉnh sửa để ẩn đi
+                editForm.classList.remove('active');
+                // Đổi nội dung của button thành "Chỉnh sửa"
+                editButton.textContent = 'Chỉnh sửa';
+                editing = false;
+            }
+        });
+    });
+</script>

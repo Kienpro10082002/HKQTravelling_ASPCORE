@@ -5,14 +5,18 @@ using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
+using System.Drawing.Printing;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using X.PagedList;
 
 namespace HKQTravelling.Controllers
 {
     public class AccountController : Controller
     {
+        #region Hung
         private readonly ApplicationDBContext data;
         public AccountController(ApplicationDBContext data)
         {
@@ -258,6 +262,9 @@ namespace HKQTravelling.Controllers
 
         }
 
+
+
+
         /* //Get Session["user_account"] are logged in before
          var userAccount = (user_account)Session["user_account"];
 
@@ -289,5 +296,30 @@ namespace HKQTravelling.Controllers
          data.SubmitChanges();
          return RedirectToAction("Index", "Home");
      }*/
+        #endregion
+
+
+        #region Tour Booked
+
+        [HttpGet]
+        [HttpGet]
+        public IActionResult TourBooked()
+        {
+           /* int pageSize = 5;
+            int pageNumber = (page ?? 1);*/
+
+            var userId = HttpContext.Session.Get("user_id");
+            var dbUserId = BitConverter.ToInt64(userId);
+            IEnumerable<Bookings> tourBooked = data.bookings.Where(t => t.UserId == dbUserId).ToList();
+
+            ViewData["Bookings"] = tourBooked; // hoặc ViewBag.Bookings = tourBooked;
+
+            return View();
+        }
+
+
+
+
+        #endregion
     }
 }

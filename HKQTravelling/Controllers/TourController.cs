@@ -1,4 +1,5 @@
 ﻿//using database
+#region Khai báo
 using HKQTravelling.Extension;
 using HKQTravelling.Models;
 using Microsoft.AspNetCore.Hosting;
@@ -16,12 +17,16 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using MailKit.Net.Smtp;
 using NETCore.MailKit;
 using MimeKit;
+using X.PagedList;
+
+#endregion
 
 
 namespace HKQTravelling.Controllers
 {
     public class TourController : Controller
     {
+        #region Recourse
         //khai báo hàm app 
         private readonly ApplicationDBContext _db;
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -30,11 +35,16 @@ namespace HKQTravelling.Controllers
             _db = db;
             _webHostEnvironment = webHostEnvironment;
         }
+        #endregion
+
         #region Index
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int? page)
         {
-            IEnumerable<Tours> objTourList = _db.tours.ToList();
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
+
+            IPagedList<Tours> objTourList = _db.tours.ToPagedList(pageNumber, pageSize);
             var startLocations = _db.startLocations.ToList();
             var endLocations = _db.endLocations.ToList();
             var tourImages = _db.tourImages.ToList();
@@ -141,8 +151,6 @@ namespace HKQTravelling.Controllers
             ViewBag.StartLocationId = new SelectList(_db.startLocations.ToList().OrderBy(n => n.StartLocationName), "StartLocationId", "StartLocationId");
             ViewBag.EndLocationId = new SelectList(_db.endLocations.ToList().OrderBy(n => n.EndLocationName), "EndLocationId", "EndLocationId");
             ViewBag.DisId = new SelectList(_db.discounts.ToList().OrderBy(n => n.DiscountId), "DiscountId", "DiscountId");
-            /*            ViewBag.RuleId = new SelectList(_db.rules.ToList().OrderBy(n => n.RuleId), "RuleId", "RuleName");
-            */
             return View();
         }
         [HttpPost]
@@ -155,10 +163,6 @@ namespace HKQTravelling.Controllers
             var status = f["Status"].ToString();
             var updateDate = f["UpdateDate"].ToString();
             var remaining = f["Remaining"].ToString();
-            /*            var disId = f["DiscountId"].ToString();
-                        var startLocationId = f["StartLocationId"].ToString();
-                        var endLocationId = f["EndLocationId"].ToString();*/
-
             var disId = Request.Form["DiscountId"].ToString().Split(',')[0];
             var startLocationId = Request.Form["StartLocationId"].ToString().Split(',')[0];
             var endLocationId = Request.Form["EndLocationId"].ToString().Split(',')[0];
@@ -227,45 +231,12 @@ namespace HKQTravelling.Controllers
                 };
                 _db.tours.Add(dbTours);
                 await _db.SaveChangesAsync();
-                /*                
-                                // Lấy danh sách email từ bảng userDetails
-                                var emails = _db.userDetails.Select(u => u.Email).ToList();
-
-                                // Tạo nội dung email
-                                var emailContent = $"Bạn nhận được 1 thông báo!\nTour mới đầy hấp dẫn\n{tours.TourName}\nHãy đặt ngay để được các ưu đãi hấp dẫn!";
-
-                                // Gửi email cho mỗi người dùng
-                                foreach (var email in emails)
-                                {
-                                    await SendEmail(email, "Thông báo tour mới", emailContent);
-                                }*/
                 return RedirectToAction("Index", "Tour");
             }
         }
-        /*
-                private async Task SendEmail(string email, string subject, string message)
-                {
-                    var emailMessage = new MimeMessage();
-                    emailMessage.From.Add(new MailboxAddress("Minh Quang", "quangngo7821@gmail.com"));
-                    emailMessage.To.Add(new MailboxAddress("", email));
-                    emailMessage.Subject = subject;
-                    emailMessage.Body = new TextPart("plain") { Text = message };
+        #endregion
 
-                    using (var client = new MailKit.Net.Smtp.SmtpClient())
-                    {
-                        // Thay thế "smtp.example.com" bằng tên máy chủ SMTP hợp lệ của dịch vụ email bạn đang sử dụng
-                        await client.ConnectAsync("smtp.gmail.com", 587, false);
-                        // Thay thế "quangngo7821@gmail.com" và "123" bằng tên người dùng và mật khẩu hợp lệ của bạn
-                        client.Authenticate("quangngo7821@gmail.com", "Qu@ng13102002");
-                        await client.SendAsync(emailMessage);
-
-                        await client.DisconnectAsync(true);
-                    }
-                }*/
-
-
-
-
+        #region Add Tour Days
         [HttpGet]
         public IActionResult Add_Tour_Days()
         {
@@ -273,6 +244,7 @@ namespace HKQTravelling.Controllers
 
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Add_Tour_Days(TourDays tourDays, IFormCollection f)
         {
@@ -388,6 +360,22 @@ namespace HKQTravelling.Controllers
 
         #endregion
 
+        #region Sorted by price
+        [HttpGet]
+        public IActionResult GetToursSortedByPriceAsc()
+        {
+            var tours = _db.tours.OrderBy(t => t.Price).ToList();
+            return PartialView("_ToursPricePartial", tours);
+        }
+        [HttpGet]
+        public IActionResult GetToursSortedByPriceDesc()
+        {
+            var tours = _db.tours.OrderByDescending(t => t.Price).ToList();
+            return PartialView("_ToursPricePartial", tours);
+        }
+
+        #endregion
+
         #region Search by Location
         [HttpGet]
         public IActionResult GetToursByStartLocation(int? startLocationId)
@@ -418,22 +406,6 @@ namespace HKQTravelling.Controllers
             }
             return PartialView("_ToursPricePartial", TourList);
         }
-        #endregion
-
-        #region Sorted by price
-        [HttpGet]
-        public IActionResult GetToursSortedByPriceAsc()
-        {
-            var tours = _db.tours.OrderBy(t => t.Price).ToList();
-            return PartialView("_ToursPricePartial", tours);
-        }
-        [HttpGet]
-        public IActionResult GetToursSortedByPriceDesc()
-        {
-            var tours = _db.tours.OrderByDescending(t => t.Price).ToList();
-            return PartialView("_ToursPricePartial", tours);
-        }
-
         #endregion
     }
 }
