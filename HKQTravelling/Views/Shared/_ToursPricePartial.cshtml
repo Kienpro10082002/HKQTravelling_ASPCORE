@@ -1,5 +1,10 @@
 ﻿@using HKQTravelling.Models;
-@model IEnumerable<Tours>
+@using X.PagedList
+@model IPagedList<Tours>
+@{
+    var i = 0;
+}
+
 <style>
     .container:empty {
         display: none;
@@ -12,7 +17,69 @@
     }
 
 </style>
+
+
 <div class="tab-pane active" id="hottour1">
+    <div class="hot-tour__list list-tour">
+
+        @foreach (var tour in Model)
+        {
+            <div class="list-tour__item tour-item">
+
+                <div class="list-tour__item-detail">
+                    <div class="list-tour__img">
+                        @if (i < ViewBag.TourImages.Count && ViewBag.TourImages[i] != null)
+                        {
+                            <a asp-area="" asp-controller="Tour" asp-action="DetailTour" asp-route-id="@tour.TourId"><img src="~/User/img/Tour/@ViewBag.TourImages[i]" alt="" style="width: 100%; height: 135px;"></a>
+                        }
+                        else
+                        {
+                            <a style="float: right;" asp-area="" asp-controller="Tour" asp-action="DetailTour" asp-route-id="@tour.TourId"><img src="~/User/img/Tour/0004822_tour-chua-linh-ung-son-tra-ngu-hanh-son-hoi-an.jpg" alt="" style="width: 100%; height: 135px; margin-bottom: 10px"></a>
+                        }
+                        @{
+                            i++;
+                        }
+                    </div>
+                    <div class="list-tour__content">
+                        <div class="list-tour__title">
+                            <h4>
+                                @tour.TourName
+                            </h4>
+                            <span class="list-tour__time">
+
+                                (<small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>@(tour.StartDate)</small>
+                                <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>@(tour.EndDate)</small>)
+                            </span>
+                        </div>
+                        <div class="list-tour__detail">
+                            <div class="list-tour__left">
+                                <div class="list-tour__date">
+                                    <i class="fas fa-calendar-alt"></i> @tour.StartDate.Value.Year
+                                </div>
+                            </div>
+                            <div class="list-tour__right">
+                                <div class="list-tour__price">
+                                    <p class="price-title">giá từ</p>
+                                    <span class="price">@String.Format("{0:0,0}", tour.Price) VND</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end m-2 btn_detail">
+                        <a class="text-dark btn btn--placeholder" style="float: right;" asp-area="" asp-controller="Tour" asp-action="DetailTour" asp-route-id="@tour.TourId">Chi Tiết</a>
+                    </div>
+                </div>
+            </div>
+
+        }
+    </div>
+
+</div>
+@* <div class="MenuTrang" style="display: flex;justify-content: center;padding-top: 16px;">
+    @await Html.PartialAsync("_PagedListPager", Model)
+</div> *@
+
+@* <div class="tab-pane active" id="hottour1">
     <div class="hot-tour__list list-tour">
         @foreach (var tour in Model)
         {
@@ -60,4 +127,4 @@
             </div>
         }
     </div>
-</div>
+</div> *@

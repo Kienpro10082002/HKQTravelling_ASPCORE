@@ -1,12 +1,17 @@
-﻿@model UserDetails
-
+﻿@using HKQTravelling.Models;
+@using X.PagedList
+@model IPagedList<Bookings>
 
 @{
     ViewData["Title"] = "TourBooked";
-    Layout = "~/Views/Account/Index.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@foreach (var booked in (IEnumerable<Bookings>)ViewData["Bookings"])
+<div class="d-flex justify-content-start m-2 btn_detail">
+    <a class="text-dark btn btn--placeholder" style="float: right;" asp-area="" asp-controller="Account" asp-action="Profile">Trở về</a>
+</div>
+
+@foreach (var booked in Model){
     if (booked.tours != null)
     {
         <h4 class="fw-bolder">@booked.tours.TourName</h4>
@@ -17,9 +22,7 @@
             @booked.PriceAdults
         </h5>
     }
-
-
-
+}
 
 
    @*  <div name="itemOrder" class="item mb-4">
@@ -75,4 +78,3 @@
         </div>
     </div> *@
 
-}
