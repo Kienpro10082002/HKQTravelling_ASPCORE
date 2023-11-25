@@ -1,9 +1,9 @@
 ﻿@using HKQTravelling.Models;
 @using X.PagedList
 @model IPagedList<Tours>
-
-
-
+@{
+    var i = 0;
+}
 
 <div class="bread-crumb">
     <div class="container">
@@ -66,30 +66,35 @@
         </div>
         <div class="tab-pane active" id="hottour1">
             <div class="hot-tour__list list-tour">
+                
                 @foreach (var tour in Model)
                 {
                     <div class="list-tour__item tour-item">
 
                         <div class="list-tour__item-detail">
                             <div class="list-tour__img">
-                                @if (ViewBag.TourImageUrls != null && ViewBag.TourImageUrls.ContainsKey(tour.TourId))
+                                @if (i < ViewBag.TourImages.Count && ViewBag.TourImages[i] != null)
                                 {
-                                    var imageUrl = ViewBag.TourImageUrls[tour.TourId];
-                                    <a asp-area="" asp-controller="Tour" asp-action="DetailTour" asp-route-id="@tour.TourId"><img src="@imageUrl" alt="" style="width: 100%; height: auto;"></a>
+                                    <a asp-area="" asp-controller="Tour" asp-action="DetailTour" asp-route-id="@tour.TourId"><img src="~/User/img/Tour/@ViewBag.TourImages[i]" alt="" style="width: 100%; height: 135px;"></a>
                                 }
                                 else
                                 {
-                                    <a style="float: right;" asp-area="" asp-controller="Tour" asp-action="DetailTour" asp-route-id="@tour.TourId"><img src="~/User/img/Tour/0004822_tour-chua-linh-ung-son-tra-ngu-hanh-son-hoi-an.jpg" alt="" style="width: 100%; height: auto;"></a>
+                                    <a style="float: right;" asp-area="" asp-controller="Tour" asp-action="DetailTour" asp-route-id="@tour.TourId"><img src="~/User/img/Tour/0004822_tour-chua-linh-ung-son-tra-ngu-hanh-son-hoi-an.jpg" alt="" style="width: 100%; height: 135px; margin-bottom: 10px"></a>
+                                }
+                                @{
+                                    i++;
                                 }
                             </div>
                             <div class="list-tour__content">
                                 <div class="list-tour__title">
                                     <h4>
-                                        @tour.TourName <span class="list-tour__time">
-                                            (                                                <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>@(tour.EndDate.Value.Day - tour.StartDate.Value.Day) Ngày</small>
-                                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>@(tour.EndDate.Value.Day - tour.StartDate.Value.Day - 1)  Đêm</small>
-                                        </span>
+                                        @tour.TourName
                                     </h4>
+                                    <span class="list-tour__time">
+
+                                        (<small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>@(tour.StartDate.Value)</small>
+                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-calendar-alt text-primary me-2"></i>@(tour.EndDate)</small>)
+                                    </span>
                                 </div>
                                 <div class="list-tour__detail">
                                     <div class="list-tour__left">
@@ -102,14 +107,15 @@
                                             <p class="price-title">giá từ</p>
                                             <span class="price">@String.Format("{0:0,0}", tour.Price) VND</span>
                                         </div>
-                                        <div class="d-flex justify-content-center mb-2">
-                                            <a class="text-dark btn btn--placeholder" style="float: right;" asp-area="" asp-controller="Tour" asp-action="DetailTour" asp-route-id="@tour.TourId">Chi Tiết</a>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="d-flex justify-content-end m-2 btn_detail">
+                                <a class="text-dark btn btn--placeholder" style="float: right;" asp-area="" asp-controller="Tour" asp-action="DetailTour" asp-route-id="@tour.TourId">Chi Tiết</a>
+                            </div>
                         </div>
                     </div>
+                    
                 }
             </div>
            
@@ -129,7 +135,7 @@
     $(document).ready(function () {
         $('.select-startLocation').change(function () {
             $('.tour-item').hide();
-            $('.MenuTrang').hide();
+            //$('.MenuTrang').hide();
             var startLocationId = $(this).val();
             console.log(startLocationId);
             $.ajax({
@@ -148,7 +154,7 @@
     $(document).ready(function () {
         $('.select-endLocation').change(function () {
             $('.tour-item').hide();
-            $('.MenuTrang').hide();
+            //$('.MenuTrang').hide();
             var endLocationId = $(this).val();
             console.log(endLocationId);
             $.ajax({
@@ -167,7 +173,7 @@
     $(document).ready(function () {
         $('.PriceAsc').click(function (e) {
             $('.tour-item').hide();
-            $('.MenuTrang').hide();
+            //$('.MenuTrang').hide();
             e.preventDefault();
 
             var sortType = $(this).text().trim(); // Lấy nội dung của nút được nhấn
@@ -190,7 +196,7 @@
     $(document).ready(function () {
         $('.PriceDesc').click(function (e) {
             $('.tour-item').hide();
-            $('.MenuTrang').hide();
+            //$('.MenuTrang').hide();
             e.preventDefault();
 
             var sortType = $(this).text().trim(); // Lấy nội dung của nút được nhấn

@@ -1,6 +1,7 @@
 ﻿using HKQTravelling.Extension;
 using HKQTravelling.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -72,7 +73,7 @@ namespace HKQTravelling.Controllers
                     HttpContext.Session.SetString("fullName", dbUserDetails.Surname + ' ' + dbUserDetails.Name);
                     HttpContext.Session.SetString("Email", dbUserDetails.Email);
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Tour");
                 }
             }
             else
@@ -208,7 +209,7 @@ namespace HKQTravelling.Controllers
             HttpContext.Session.Clear();
 
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Tour");
         }
         #endregion
 
@@ -302,23 +303,20 @@ namespace HKQTravelling.Controllers
         #region Tour Booked
 
         [HttpGet]
-        [HttpGet]
-        public IActionResult TourBooked()
+        public IActionResult TourBooked(int? page)
         {
-           /* int pageSize = 5;
-            int pageNumber = (page ?? 1);*/
-
+            int pageSize = 100000;
+            int pageNumber = (page ?? 1);
             var userId = HttpContext.Session.Get("user_id");
             var dbUserId = BitConverter.ToInt64(userId);
-            IEnumerable<Bookings> tourBooked = data.bookings.Where(t => t.UserId == dbUserId).ToList();
+            IPagedList<Bookings> objTourBookedList = data.bookings.Where(x => x.UserId == dbUserId).ToPagedList(pageNumber, pageSize);
+            var user = data.users.ToList();
+            var userDetail = data.userDetails.ToList();
+            var tour = data.tours.ToList();
 
-            ViewData["Bookings"] = tourBooked; // hoặc ViewBag.Bookings = tourBooked;
-
-            return View();
+            ViewBag.Tour = tour;
+            return View(objTourBookedList);
         }
-
-
-
 
         #endregion
     }

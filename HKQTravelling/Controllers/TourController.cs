@@ -18,6 +18,8 @@ using MailKit.Net.Smtp;
 using NETCore.MailKit;
 using MimeKit;
 using X.PagedList;
+using System.Linq;
+using System.Collections.Generic;
 
 #endregion
 
@@ -49,19 +51,19 @@ namespace HKQTravelling.Controllers
             var endLocations = _db.endLocations.ToList();
             var tourImages = _db.tourImages.ToList();
 
-            var tourImageUrls = new Dictionary<long, string>();
+            var tourImageUrls = new List<string>();
             foreach (var tour in objTourList)
             {
                 var image = tourImages.FirstOrDefault(ti => ti.TourId == tour.TourId);
                 if (image != null)
                 {
-                    tourImageUrls[tour.TourId] = image.ImageUrl;
+                    tourImageUrls.Add(image.ImageUrl);
                 }
             }
 
             ViewBag.StartLocations = new SelectList(startLocations, "StartLocationId", "StartLocationName");
             ViewBag.EndLocations = new SelectList(endLocations, "EndLocationId", "EndLocationName");
-            ViewBag.TourImages = tourImages;
+            ViewBag.TourImages = tourImageUrls;
             return View(objTourList);
         }
         #endregion
@@ -362,15 +364,45 @@ namespace HKQTravelling.Controllers
 
         #region Sorted by price
         [HttpGet]
-        public IActionResult GetToursSortedByPriceAsc()
+        public IActionResult GetToursSortedByPriceAsc(int? page)
         {
-            var tours = _db.tours.OrderBy(t => t.Price).ToList();
+            int pageSize = 100;
+            int pageNumber = (page ?? 1);
+            IPagedList<Tours> tours = _db.tours.OrderBy(t => t.Price).ToPagedList(pageNumber, pageSize);
+            var tourImages = _db.tourImages.ToList();
+
+            var tourImageUrls = new List<string>();
+            foreach (var tour in tours)
+            {
+                var image = tourImages.FirstOrDefault(ti => ti.TourId == tour.TourId);
+                if (image != null)
+                {
+                    tourImageUrls.Add(image.ImageUrl);
+                }
+            }
+
+            ViewBag.TourImages = tourImageUrls;
             return PartialView("_ToursPricePartial", tours);
         }
         [HttpGet]
-        public IActionResult GetToursSortedByPriceDesc()
+        public IActionResult GetToursSortedByPriceDesc(int? page)
         {
-            var tours = _db.tours.OrderByDescending(t => t.Price).ToList();
+            int pageSize = 100;
+            int pageNumber = (page ?? 1);
+            IPagedList<Tours> tours= _db.tours.OrderByDescending(t => t.Price).ToPagedList(pageNumber, pageSize);
+            var tourImages = _db.tourImages.ToList();
+
+            var tourImageUrls = new List<string>();
+            foreach (var tour in tours)
+            {
+                var image = tourImages.FirstOrDefault(ti => ti.TourId == tour.TourId);
+                if (image != null)
+                {
+                    tourImageUrls.Add(image.ImageUrl);
+                }
+            }
+
+            ViewBag.TourImages = tourImageUrls;
             return PartialView("_ToursPricePartial", tours);
         }
 
@@ -378,32 +410,60 @@ namespace HKQTravelling.Controllers
 
         #region Search by Location
         [HttpGet]
-        public IActionResult GetToursByStartLocation(int? startLocationId)
+        public IActionResult GetToursByStartLocation(int? startLocationId, int? page)
         {
-            IEnumerable<Tours> TourList = _db.tours.ToList();
+            int pageSize = 100;
+            int pageNumber = (page ?? 1);
+            IPagedList<Tours> TourList = _db.tours.ToPagedList(pageNumber, pageSize);
+            var tourImages = _db.tourImages.ToList();
+
+            var tourImageUrls = new List<string>();
+            foreach (var tour in TourList)
+            {
+                var image = tourImages.FirstOrDefault(ti => ti.TourId == tour.TourId);
+                if (image != null)
+                {
+                    tourImageUrls.Add(image.ImageUrl);
+                }
+            }
             if (startLocationId.HasValue)
             {
-                TourList = _db.tours.Where(t => t.StartLocationId == startLocationId).ToList();
+                TourList = _db.tours.Where(t => t.StartLocationId == startLocationId).ToPagedList(pageNumber, pageSize);
             }
             else
             {
-                TourList = _db.tours.ToList();
+                TourList = _db.tours.ToPagedList(pageNumber, pageSize);
             }
+            ViewBag.TourImages = tourImageUrls;
             return PartialView("_ToursPricePartial", TourList);
         }
 
         [HttpGet]
-        public IActionResult GetToursByEndLocation(int? endLocationId)
+        public IActionResult GetToursByEndLocation(int? endLocationId, int? page)
         {
-            IEnumerable<Tours> TourList = _db.tours.ToList();
+            int pageSize = 100;
+            int pageNumber = (page ?? 1);
+            IPagedList<Tours> TourList = _db.tours.ToPagedList(pageNumber, pageSize);
+            var tourImages = _db.tourImages.ToList();
+
+            var tourImageUrls = new List<string>();
+            foreach (var tour in TourList)
+            {
+                var image = tourImages.FirstOrDefault(ti => ti.TourId == tour.TourId);
+                if (image != null)
+                {
+                    tourImageUrls.Add(image.ImageUrl);
+                }
+            }
             if (endLocationId.HasValue)
             {
-                TourList = _db.tours.Where(t => t.EndLocationId == endLocationId).ToList();
+                TourList = _db.tours.Where(t => t.EndLocationId == endLocationId).ToPagedList(pageNumber, pageSize);
             }
             else
             {
-                TourList = _db.tours.ToList();
+                TourList = _db.tours.ToPagedList(pageNumber, pageSize);
             }
+            ViewBag.TourImages = tourImageUrls;
             return PartialView("_ToursPricePartial", TourList);
         }
         #endregion
