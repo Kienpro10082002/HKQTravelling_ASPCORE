@@ -143,6 +143,62 @@ namespace HKQTravelling.Controllers
 
         #endregion
 
+        #region Add TourImages
+        [HttpGet]
+        public IActionResult addTourImages()
+        {
+            ViewBag.TourId = new SelectList(_db.tours.ToList().OrderBy(n => n.TourId), "TourId", "TourName");
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> addTourImages(TourImages tourImages, IFormFile ImageUrl, IFormCollection f)
+        {
+            var dayNumber = f["DayNumber"].ToString();
+            var tourId = f["TourId"].ToString();
+
+            if (string.IsNullOrEmpty(dayNumber))
+            {
+                ViewData["checking_dayNumber"] = "DayNumber trống!";
+                return View();
+            }
+            else if (ImageUrl == null || ImageUrl.Length == 0)
+            {
+                ViewData["checking_imageUrl"] = "ImageUrl trống!";
+                return View();
+            }
+            else if (string.IsNullOrEmpty(tourId))
+            {
+                ViewData["checking_tourID"] = "TourId trống!";
+                return View();
+            }
+            else
+            {
+                // Lưu tệp hình ảnh vào một thư mục trên máy chủ
+                var path = Path.Combine(
+                            Directory.GetCurrentDirectory(), "wwwroot/User/img/Tour",
+                            ImageUrl.FileName);
+
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await ImageUrl.CopyToAsync(stream);
+                }
+
+                // Lưu đường dẫn tệp vào cơ sở dữ liệu
+                var dbTourImages = new Models.TourImages
+                {
+                    ImageUrl = ImageUrl.FileName,
+                    DayNumber = int.Parse(dayNumber),
+                    TourId = int.Parse(tourId)
+                };
+                _db.tourImages.Add(dbTourImages);
+                await _db.SaveChangesAsync();
+                return RedirectToAction("Index", "Tour");
+            }
+        }
+
+        #endregion
+
         #region Add Tour
         [HttpGet]
         public IActionResult AddTour()
@@ -242,8 +298,7 @@ namespace HKQTravelling.Controllers
         [HttpGet]
         public IActionResult Add_Tour_Days()
         {
-            ViewBag.TourId = new SelectList(_db.tours.ToList().OrderBy(n => n.TourId), "TourId", "TourId");
-
+            ViewBag.TourId = new SelectList(_db.tours.ToList().OrderBy(n => n.TourId), "TourId", "TourName");
             return View();
         }
 
