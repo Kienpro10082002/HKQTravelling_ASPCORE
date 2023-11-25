@@ -313,7 +313,18 @@ namespace HKQTravelling.Controllers
             var user = data.users.ToList();
             var userDetail = data.userDetails.ToList();
             var tour = data.tours.ToList();
+            var tourImages = data.tourImages.ToList();
 
+            var tourImageUrls = new List<string>();
+            foreach (var tours in objTourBookedList)
+            {
+                var image = tourImages.FirstOrDefault(ti => ti.TourId == tours.TourId);
+                if (image != null)
+                {
+                    tourImageUrls.Add(image.ImageUrl);
+                }
+            }
+            ViewBag.TourImages = tourImageUrls;
             ViewBag.Tour = tour;
             return View(objTourBookedList);
         }

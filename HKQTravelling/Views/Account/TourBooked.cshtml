@@ -5,6 +5,7 @@
 @{
     ViewData["Title"] = "TourBooked";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var i = 0;
 }
 
 <div class="d-flex justify-content-start m-2 btn_detail">
@@ -14,15 +15,74 @@
 @foreach (var booked in Model){
     if (booked.tours != null)
     {
-        <h4 class="fw-bolder">@booked.tours.TourName</h4>
+        @* <h4 class="fw-bolder">@booked.tours.TourName</h4>
         <p class="text-muted">
             @booked.tours.StartDate - @booked.tours.EndDate
         </p>
         <h5 class="text-primary fw-bold">
             @booked.PriceAdults
-        </h5>
+        </h5> *@
+
+
+        <div name="itemOrder" class="item mb-4">
+        
+        
+        <div class="card mb-3 p-md-3">
+            <div class="row g-0">
+                <div class="col-md-3 col-12">
+                    <div class="image">
+                        <a href="/du-lich/track-booking-no-231116542906/tra-cuu-booking.aspx" target="_blank">
+                            <img src="~/User/img/Tour/@ViewBag.TourImages[i]" alt="">
+                        </a>
+                        @{i++;}
+                    </div>
+                </div>
+                <div class="col-md-9 col-12 p-3">
+                    <h5 class="card-title h5 h6-sm fw-bolder mb-3">
+                            <h4 class="fw-bolder">@booked.tours.TourName</h4>
+                    </h5>
+                    <div class="row align-items-center">
+                        <div class="col-md-8 col-7">
+                            <div class="d-flex d-lg-block justify-content-between">
+                                <div>
+                                    <div class="s-rate">
+                                        <span>9</span>
+                                        <div class="s-comment">
+                                            <h6 class="fw-bold mb-0">
+                                                Tuyệt vời
+                                            </h6>
+                                            <p>358 quan tâm</p>
+                                        </div>
+                                    </div>
+                                    <p>
+                                        <p class="text-muted">
+                                                @booked.tours.StartDate - @booked.tours.EndDate
+                                        </p>
+                                    </p>
+                                    <p class="card-text">
+                                        <small class="text-muted">1 người, 4 đêm</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-5 text-end">
+                            <h6 class="text-primary">Tổng tiền thanh toán</h6>
+                            <h5 class="text-primary fw-bold">
+                                @booked.PriceAdults
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
     }
 }
+
+<div class="d-flex justify-content-start m-2 btn_detail">
+    <a class="text-dark btn btn--placeholder" href="#">Top</a>
+</div>
 
 
    @*  <div name="itemOrder" class="item mb-4">
